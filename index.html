@@ -1,316 +1,104 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice Chat Room - Social Overlay</title>
-    <style>
-        /* ========================================================
-           نظام الطبقة مزوجي (العزل التام عن أزرار الروم)
-           ======================================================== */
-        #social-overlay-system {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            /* هامة جداً: تجعل الواجهة بالكامل شفافة أمام اللمس والنقرات */
-            pointer-events: none; 
-            z-index: 99999;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            overflow: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome Screen</title>
 
-        /* إعادة تفعيل اللمس فقط وحصرياً للعناصر التي يحتاجها المستخدم */
-        .interactive-element {
-            pointer-events: auto;
-        }
+<style>
+/* خلفية التطبيق */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: white;
+}
 
-        /* ========================================================
-           حاوية شاشة البداية (تغلق الروم مؤقتاً لحين الضغط على متابعة)
-           ======================================================== */
-        #center-intro-wrapper {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.2); /* خلفية خفيفة جداً لمنع التفاعل مؤقتاً */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100000;
-            pointer-events: auto; /* تمنع التفاعل مع الروم فقط في أول ثانيتين */
-            transition: all 0.5s ease;
-        }
+/* شاشة الترحيب */
+#splash {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, #000, #111);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
 
-        #center-intro {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 20px 30px;
-            border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+/* نص متحرك بألوان الطيف */
+.rainbow-text {
+    font-size: 40px;
+    font-weight: bold;
+    background: linear-gradient(
+        90deg,
+        red,
+        orange,
+        yellow,
+        green,
+        cyan,
+        blue,
+        violet,
+        red
+    );
+    background-size: 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rainbow 5s linear infinite;
+}
 
-        .mini-loader {
-            width: 20px;
-            height: 20px;
-            border: 2.5px solid rgba(0, 122, 255, 0.1);
-            border-top-color: #007AFF;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 12px;
-        }
+@keyframes rainbow {
+    0% { background-position: 0% }
+    100% { background-position: 400% }
+}
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+/* زر الدخول */
+button {
+    margin-top: 30px;
+    padding: 12px 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    background: #00c6ff;
+    color: white;
+    transition: 0.3s;
+}
 
-        .intro-text {
-            font-size: 13px;
-            color: #1d1d1f;
-            font-weight: 600;
-            margin: 0;
-        }
+button:hover {
+    background: #0072ff;
+    transform: scale(1.05);
+}
 
-        #continue-btn {
-            display: none;
-            background: #007AFF;
-            color: #fff;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
-            transition: transform 0.2s ease;
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-        #continue-btn.show {
-            display: block;
-            animation: fadeInUp 0.4s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* حركات التلاشي عند الاختفاء */
-        .fade-out-all {
-            opacity: 0 !important;
-            visibility: hidden !important;
-            transform: scale(0.9) !important;
-        }
-
-        /* ========================================================
-           القائمة الجانبية (Sidebar) - معزولة ومستقلة
-           ======================================================== */
-        #left-sidebar {
-            position: absolute;
-            top: 30%; /* مرتفعة قليلاً لتترك مساحة لأزرار الروم السفلى */
-            left: 15px; 
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 8px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            opacity: 0;
-            transform: translateX(-50px) scale(0.8);
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            visibility: hidden;
-        }
-
-        #left-sidebar.active {
-            opacity: 1;
-            transform: translateX(0) scale(1);
-            visibility: visible;
-        }
-
-        .social-icon-btn {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 14px;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .social-icon-btn:hover {
-            background: rgba(255, 0, 0, 0.1);
-            transform: scale(1.05);
-        }
-
-        .social-icon-btn svg {
-            width: 26px;
-            height: 26px;
-            fill: #FF0000;
-        }
-
-        /* ========================================================
-           النافذة الجانبية للمحتوى (Panel) - نصف الشاشة
-           ======================================================== */
-        #social-panel {
-            position: absolute;
-            top: 5vh; 
-            left: 75px; /* تفتح بجانب زر اليوتيوب مباشرة */
-            height: 90vh; 
-            width: 48vw; 
-            min-width: 260px;
-            max-width: 380px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-radius: 24px;
-            box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            transform: translateX(-20px);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        #social-panel.open {
-            transform: translateX(0);
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .panel-header {
-            padding: 18px 20px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .panel-header h3 {
-            margin: 0;
-            font-size: 15px;
-            color: #111;
-            font-weight: 700;
-        }
-
-        .panel-content {
-            padding: 20px;
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .placeholder-box {
-            height: 55px;
-            background: rgba(0, 0, 0, 0.03);
-            border: 1px dashed rgba(0, 0, 0, 0.1);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-size: 12px;
-        }
-    </style>
+/* محتوى التطبيق */
+#app {
+    display: none;
+    padding: 20px;
+}
+</style>
 </head>
+
 <body>
 
-    <div id="social-overlay-system">
-        
-        <div id="center-intro-wrapper">
-            <div id="center-intro">
-                <div id="loading-view" style="text-align: center;">
-                    <div class="mini-loader"></div>
-                    <p class="intro-text">مواقع التواصل الاجتماعي أصبحت مدعومة</p>
-                </div>
-                <button id="continue-btn">متابعة</button>
-            </div>
-        </div>
+<!-- شاشة الترحيب -->
+<div id="splash">
+    <div class="rainbow-text">مرحبا بكم</div>
+    <button onclick="enterApp()">دخول</button>
+</div>
 
-        <div id="left-sidebar" class="interactive-element">
-            <button class="social-icon-btn" id="youtube-btn" title="YouTube">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M21.582,6.186c-0.23-0.86-0.908-1.538-1.768-1.768C18.254,4,12,4,12,4S5.746,4,4.186,4.418 c-0.86,0.23-1.538,0.908-1.768,1.768C2,7.746,2,12,2,12s0,4.254,0.418,5.814c0.23,0.86,0.908,1.538,1.768,1.768 C5.746,20,12,20,12,20s6.254,0,7.814-0.418c0.86-0.23,1.538-0.908,1.768-1.768C22,16.254,22,12,22,12S22,7.746,21.582,6.186z M9.6,15.2V8.8L15.6,12L9.6,15.2z"/>
-                </svg>
-            </button>
-        </div>
+<!-- التطبيق -->
+<div id="app">
+    <h1>تم الدخول إلى التطبيق ✅</h1>
+    <p>هنا يبدأ محتوى التطبيق الحقيقي.</p>
+</div>
 
-        <div id="social-panel" class="interactive-element">
-            <div class="panel-header">
-                <h3>منصات التواصل</h3>
-            </div>
-            <div class="panel-content">
-                <div class="placeholder-box">مساحة لزر يوتيوب الجديد</div>
-                <div class="placeholder-box">مساحة لروابط الدعم</div>
-                <div class="placeholder-box">قريباً منصات أخرى...</div>
-            </div>
-        </div>
+<script>
+function enterApp() {
+    document.getElementById("splash").style.display = "none";
+    document.getElementById("app").style.display = "block";
+}
+</script>
 
-    </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const loadingView = document.getElementById('loading-view');
-            const continueBtn = document.getElementById('continue-btn');
-            const introWrapper = document.getElementById('center-intro-wrapper');
-            const centerIntro = document.getElementById('center-intro');
-            const leftSidebar = document.getElementById('left-sidebar');
-            const youtubeBtn = document.getElementById('youtube-btn');
-            const socialPanel = document.getElementById('social-panel');
-
-            // 1. بعد ثانيتين: إخفاء التحميل وإظهار زر متابعة
-            setTimeout(() => {
-                loadingView.style.display = 'none';
-                continueBtn.classList.add('show');
-            }, 2000);
-
-            // 2. عند الضغط على متابعة (العزل والتدمير الفوري لحاوية البداية)
-            continueBtn.addEventListener('click', () => {
-                // عمل تأثير تلاشي ناعم جهة اليسار لشاشة المنتصف
-                centerIntro.style.transform = 'translate(-100px, 0) scale(0.9)';
-                introWrapper.classList.add('fade-out-all');
-                
-                // إظهار القائمة الجانبية فوراً أثناء حركة التلاشي
-                leftSidebar.classList.add('active');
-
-                // تدمير حاوية المنتصف تماماً من كود الصفحة بعد نصف ثانية لفتح الروم كلياً للمس
-                setTimeout(() => {
-                    introWrapper.remove(); 
-                }, 500);
-            });
-
-            // 3. فتح وإغلاق نافذة اليوتيوب
-            youtubeBtn.addEventListener('click', (e) => {
-                e.stopPropagation(); // منع وصول الضغطة لخلفية الروم
-                socialPanel.classList.toggle('open');
-            });
-
-            // 4. الإغلاق الذكي عند الضغط على الروم (الخلفية الأساسية)
-            document.addEventListener('click', (event) => {
-                const isPanelOpen = socialPanel.classList.contains('open');
-                const clickedInsidePanel = socialPanel.contains(event.target);
-                const clickedOnSidebar = leftSidebar.contains(event.target);
-
-                // إذا ضغط المستخدم على أي مكان في الروم والنافذة مفتوحة، تغلق تلقائياً
-                if (isPanelOpen && !clickedInsidePanel && !clickedOnSidebar) {
-                    socialPanel.classList.remove('open');
-                }
-            });
-        });
-    </script>
 </body>
 </html>
