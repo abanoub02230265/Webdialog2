@@ -2,962 +2,311 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>VIP Premium System - Ultimate Edition</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Overlay Sidebar</title>
     <style>
-        /* =========================================
-           CORE SYSTEM STYLES & ANIMATED BACKGROUND
-           ========================================= */
-        body, html {
-            margin: 0;
-            padding: 0; height: 100%; width: 100%;
-            overflow: hidden; font-family: sans-serif;
-            background-color: #000000;
-            /* Background Pattern */
-            background-image: 
-                linear-gradient(45deg, rgba(255, 215, 0, 0.05) 25%, transparent 25%, transparent 75%, rgba(0, 255, 255, 0.05) 75%, rgba(0, 255, 255, 0.05)),
-                linear-gradient(45deg, rgba(0, 255, 255, 0.05) 25%, transparent 25%, transparent 75%, rgba(255, 215, 0, 0.05) 75%, rgba(255, 215, 0, 0.05));
-            background-position: 0 0, 20px 20px;
-            background-size: 40px 40px;
-            /* TWEAK: Falling Animation added to body background */
-            animation: bgFall 4s linear infinite;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        /* Animation for Falling Squares */
-        @keyframes bgFall {
-            0% { background-position: 0 0, 20px 20px; }
-            100% { background-position: 0 80px, 20px 100px; } /* Moves down vertically */
-        }
-
-        /* HEADER */
-        .vip-header {
+        /* ========================================================
+           إعدادات النظام الأساسية للواجهة الجانبية (Overlay System)
+           ======================================================== */
+        #social-overlay-system {
             position: fixed;
-            top: 0; left: 0; width: 100%;
-            height: 2.8cm;
-            display: flex; flex-direction: column;
-            justify-content: space-evenly; align-items: center;
-            z-index: 1000;
-            background-color: #0a0a0a;
-            background-image: 
-                linear-gradient(rgba(191, 149, 63, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(191, 149, 63, 0.05) 1px, transparent 1px);
-            background-size: 20px 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(0, 0, 0, 0.8);
-        }
-        .hacker-top-bar {
-            width: 90%; display: flex; justify-content: space-between; align-items: center;
-            font-family: 'Share Tech Mono', monospace; font-size: 11px; color: #00ff41;
-            text-shadow: 0 0 5px rgba(0, 255, 65, 0.5); margin-top: 5px; direction: ltr;
-        }
-        .blink-text { animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
-        .digital-clock-container {
-            position: relative; padding: 0 15px;
-            border-left: 1px solid rgba(191, 149, 63, 0.3); border-right: 1px solid rgba(191, 149, 63, 0.3);
-        }
-        .digital-clock {
-            font-family: 'Share Tech Mono', monospace; font-size: 32px; font-weight: 400;
-            letter-spacing: 2px; white-space: nowrap;
-            background: linear-gradient(180deg, #fff 0%, #fcf6ba 40%, #bf953f 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 8px rgba(191, 149, 63, 0.4));
-        }
-        .hacker-bottom-bar {
-            width: 95%; display: flex; justify-content: center; gap: 15px;
-            font-family: 'Cairo', sans-serif; font-size: 10px; font-weight: 700;
-            color: #d4b469; text-transform: uppercase;
-            border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 2px; margin-bottom: 5px; z-index: 2;
-        }
-        .stat-item { display: flex; align-items: center; gap: 4px; }
-        .stat-icon { color: #ff0033; font-size: 12px; } 
-        .luxury-bottom-frame {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 0.2cm;
-            z-index: 50; pointer-events: none;
-            background: linear-gradient(to bottom, #bf953f, #fcf6ba, #b38728, #8a620e);
-            border-top: 1px solid #5a3a0a; box-shadow: 0 -2px 3px rgba(0, 0, 0, 0.3);
-            border-radius: 0 0 2px 2px;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            /* خاصية هامة جداً: تسمح للمستخدم بالضغط على التطبيق الأساسي خلف هذه الواجهة */
+            pointer-events: none; 
+            z-index: 99999;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
         }
 
-        /* TICKER */
-        .security-ticker-bar {
-            position: fixed; top: 2.8cm; left: 0; width: 100%; height: 0.6cm; 
-            background-color: #020202; z-index: 900;
-            display: flex; align-items: center; overflow: hidden;
-            font-family: 'Cairo', sans-serif; font-size: 11px; font-weight: 700;
-            color: #00ff41; text-shadow: 0 0 2px rgba(0, 255, 65, 0.3); direction: ltr;
-        }
-        .ticker-track {
-            white-space: nowrap; will-change: transform;
-            animation: tickerTunnelLeftToRight 80s linear infinite; display: flex; align-items: center;
-        }
-        .msg-item { display: inline-flex; align-items: center; margin-right: 60px; }
-        .msg-dot { color: #00ff41; margin-right: 8px; font-size: 10px; animation: blink 2s infinite; }
-        .msg-title { font-family: 'Share Tech Mono', monospace; font-weight: 400; letter-spacing: 1px; margin-right: 8px; text-transform: uppercase; }
-        .msg-text { color: #ccffda; font-weight: 600; }
-        @keyframes tickerTunnelLeftToRight { 0% { transform: translateX(-100%); } 100% { transform: translateX(100vw); } }
-
-        /* CONTENT */
-        .image-container {
-            position: fixed; top: 3.4cm; bottom: 6cm; left: 0; right: 0;
-            display: flex; justify-content: center; align-items: flex-start; z-index: 1;
-        }
-        .image-wrapper { position: relative; max-width: 100%; max-height: 100%; }
-        .image-wrapper img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        .luxury-top-frame {
-            position: absolute; top: 0; left: 0; width: 100%; height: 0.2cm;
-            z-index: 50; pointer-events: none;
-            background: linear-gradient(to bottom, #bf953f, #fcf6ba, #b38728, #8a620e);
-            border-bottom: 1px solid #5a3a0a; box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
-            border-radius: 2px 2px 0 0;
-        }
-        
-        /* EMOJIS */
-        .emoji {
-            position: absolute; font-size: 60px; pointer-events: none;
-            display: inline-block; text-align: center; opacity: 0; 
-            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s ease; z-index: 10;
-        }
-        .emoji.visible { opacity: 1; }
-        .emoji.active-selection::after {
-            content: ''; position: absolute; top: 50%; left: 50%;
-            width: 140%; height: 140%; transform: translate(-50%, -50%);
-            background: radial-gradient(circle, rgba(255, 50, 50, 0.4) 0%, rgba(255, 0, 0, 0) 70%);
-            border-radius: 50%; z-index: -1; animation: pulseRed 0.5s ease-in-out infinite;
-        }
-        @keyframes pulseRed {
-            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
-            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
-            100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
-        }
-        .engraved-on-head {
-            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
-            font-size: 13px; font-weight: 900; white-space: nowrap;
-            color: #2e002e; mix-blend-mode: multiply; opacity: 0.9;
-            text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2), 0px -1px 0px rgba(0, 0, 0, 0.5); z-index: 2;
-        }
-        .countdown-timer {
-            position: absolute; bottom: calc(0.25cm + 60px + 2.2cm); 
-            left: calc(50% + 0.1cm); transform: translateX(-50%);
-            font-size: 18px; font-weight: 900; color: #ffffff;
-            font-family: 'Arial', sans-serif; text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.6);
-            display: flex; align-items: baseline; direction: ltr; z-index: 100;
-            pointer-events: none; opacity: 0; transition: opacity 0.3s ease;
-        }
-        .countdown-timer.show-timer { opacity: 1; }
-        .big-symbol { font-size: 18px; letter-spacing: -1px; margin-right: 3px; line-height: 1; }
-
-        /* Emoji Positions */
-        .emoji.one { top: 1cm; left: 50%; transform: translateX(-50%); }
-        .emoji.two { top: 2cm; left: calc(50% + 2.75cm); transform: translateX(-50%); }
-        .emoji.three { top: 2cm; left: calc(50% - 2.75cm + 0.15cm); transform: translateX(-50%); }
-        .emoji.four { top: calc(2cm + 2.5cm + 0.3cm); left: calc(50% + 2.75cm + 1cm + 2px + 0.15cm); transform: translateX(-50%); }
-        .emoji.five { top: calc(2cm + 2.5cm + 0.3cm); left: calc(50% - (2.75cm + 1cm + 2px)); transform: translateX(-50%); }
-        .emoji.six { top: calc(2cm + 2.5cm + 2.75cm + 0.3cm); left: calc((50% + 2.75cm + 1cm + 2px) - 1cm); transform: translateX(-50%); }
-        .emoji.seven { top: calc(2cm + 2.5cm + 2.75cm + 0.3cm); left: calc((50% - (2.75cm + 1cm + 2px)) + 1cm + 0.15cm); transform: translateX(-50%); }
-        .emoji.eight { bottom: 0.25cm; left: calc(50% + 0.1cm); transform: translateX(-50%); }
-
-        /* =========================================
-           MAIN BUTTON STYLES (Lifted UP 2cm)
-           ========================================= */
-        .apk-luxury-btn {
-            position: fixed;
-            /* TWEAK: Raised up by approx 2cm (Original 30px + ~75px) */
-            bottom: 105px; 
-            left: 50%; 
-            transform: translateX(-50%);
-            width: calc(100% - 1cm); 
-            height: 2.2cm;
-            z-index: 200;
-            
-            background: linear-gradient(to bottom, #1a1a1a, #000000);
-            border: none;
-            border-radius: 15px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            
-            cursor: pointer; outline: none; display: flex; justify-content: center; align-items: center;
-            overflow: hidden; transition: all 0.3s ease;
+        /* تفعيل التفاعل فقط للعناصر الخاصة بالواجهة */
+        .interactive-element {
+            pointer-events: auto;
         }
 
-        /* Animated Border Effect (The Ring) */
-        .apk-luxury-btn::after {
-            content: '';
+        /* ========================================================
+           حاوية شاشة البداية (في المنتصف)
+           ======================================================== */
+        #center-intro {
             position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: conic-gradient(transparent, transparent, transparent, #bf953f, #00ffff);
-            animation: borderRotate 4s linear infinite;
-            z-index: 0;
-        }
-        @keyframes borderRotate { 100% { transform: rotate(1turn); } }
-
-        /* Mask to make the content sit on top of the border animation */
-        .btn-mask {
-            position: absolute;
-            top: 2px; left: 2px; right: 2px; bottom: 2px;
-            background: linear-gradient(to bottom, #1a1a1a, #050505);
-            border-radius: 13px;
-            z-index: 1;
-        }
-
-        .apk-luxury-btn::before {
-            content: '';
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(255, 0, 0, 0.15) 0%, transparent 70%);
-            animation: redBreath 3s infinite ease-in-out;
-            z-index: 2; pointer-events: none;
-        }
-        @keyframes redBreath { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.2); } }
-
-        .apk-luxury-btn.disabled { filter: grayscale(1); pointer-events: none; }
-        
-        .btn-content {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            pointer-events: none; z-index: 3; width: 100%; position: relative;
-        }
-        
-        .btn-text-main {
-            font-family: 'Cairo', sans-serif;
-            font-size: 20px; font-weight: 800;
-            color: #ffffff; 
-            text-transform: uppercase; letter-spacing: 0.5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,1);
-            transition: all 0.3s ease;
-        }
-        .highlight-yellow { color: #bf953f; }
-
-        .btn-text-sub {
-            font-size: 10px; font-weight: 600; color: #ff3333;
-            margin-top: 4px; opacity: 0.9; letter-spacing: 2px;
-            font-family: 'Share Tech Mono', monospace;
-            text-transform: uppercase;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 15px 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+            opacity: 1;
         }
 
-        .btn-mini-loader {
-            width: 20px; height: 20px;
-            border: 2px solid #bf953f; border-bottom-color: transparent;
-            border-radius: 50%; display: inline-block;
-            animation: rotation 1s linear infinite; margin-bottom: 5px;
-        }
-        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* Effects */
-        .ripple {
-            position: absolute; border-radius: 50%; background: rgba(255, 50, 50, 0.4);
-            transform: scale(0); animation: rippleAnim 0.6s linear; pointer-events: none; z-index: 300;
-        }
-        @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
-        
-        .star-particle {
-            position: fixed; width: 10px; height: 10px; background-color: #ffd700;
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            pointer-events: none; z-index: 300; animation: starBurst 0.8s ease-out forwards;
-        }
-        @keyframes starBurst {
-            0% { transform: translate(-50%, -50%) scale(0.5) rotate(0deg); opacity: 1; }
-            100% { transform: translate(var(--tx), var(--ty)) scale(0) rotate(180deg); opacity: 0; }
+        /* تأثير دائرة التحميل الصغرى */
+        .mini-loader {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-top-color: #007AFF; /* لون أزرق عصري */
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 8px;
         }
 
-        /* =========================================
-           SUBSCRIPTION PAGE
-           ======================================== */
-        #subscription-page {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #050505 0%, #1a0505 50%, #000000 100%);
-            z-index: 99999; 
-            overflow-y: auto; overflow-x: hidden;
-            display: none; flex-direction: column;
-            font-family: 'Cairo', sans-serif; color: #fff;
-            padding-bottom: 50px;
-        }
-        #subscription-page.visible { display: flex; animation: pageSlideIn 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
-
-        @keyframes pageSlideIn {
-            from { opacity: 0; transform: translateY(50px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        /* Back Button Style */
-        .back-btn {
-            position: absolute; top: 20px; left: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff; padding: 8px 15px; border-radius: 8px;
-            cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 14px;
-            display: flex; align-items: center; gap: 5px;
-            backdrop-filter: blur(5px); z-index: 100000;
-            transition: 0.3s;
-        }
-        .back-btn:hover { background: rgba(255, 255, 255, 0.2); transform: translateX(3px); }
-
-        /* Loading Overlay for Return */
-        #nav-loader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 100002; display: none;
-            flex-direction: column; justify-content: center; align-items: center;
-        }
-        #nav-loader.show { display: flex; }
-        .loader-spinner {
-            width: 40px; height: 40px; border: 4px solid #333; border-top-color: #bf953f;
-            border-radius: 50%; animation: rotation 1s linear infinite;
-        }
-
-        /* Background Animated Elements */
-        .bg-anim-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: -1; overflow: hidden;
-        }
-        .bubble {
-            position: absolute; bottom: -50px; background: rgba(255, 255, 255, 0.05);
-            border-radius: 50%; animation: rise 15s infinite ease-in;
-        }
-        @keyframes rise {
-            0% { bottom: -50px; transform: translateX(0); opacity: 0; }
-            50% { opacity: 0.5; }
-            100% { bottom: 100%; transform: translateX(-20px); opacity: 0; }
-        }
-        .stars-bg {
-            background-image: radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
-                              radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
-                              radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0));
-            background-size: 200px 200px;
-            width: 100%; height: 100%; position: absolute; top: 0; left: 0;
-            animation: starMove 100s linear infinite; opacity: 0.3;
-        }
-        @keyframes starMove { from { transform: translateY(0); } to { transform: translateY(-1000px); } }
-
-        /* Sub Page Components */
-        .sub-header {
-            text-align: center; padding: 60px 20px 30px;
-            background: linear-gradient(to bottom, rgba(191, 149, 63, 0.15), transparent);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(5px);
-        }
-        .vip-title {
-            font-size: 32px; color: #bf953f; font-weight: 900; margin: 0;
-            text-shadow: 0 0 20px rgba(191, 149, 63, 0.5);
-            letter-spacing: 1px; animation: floatTitle 3s ease-in-out infinite;
-        }
-        @keyframes floatTitle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-        
-        .sub-content { 
-            padding: 40px 25px; max-width: 650px; margin: 0 auto; width: 100%; box-sizing: border-box; 
-            display: flex; flex-direction: column; gap: 30px; 
-        }
-
-        .glass-box {
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px; padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            animation: fadeUp 0.8s ease-out;
-            position: relative; overflow: hidden;
-        }
-        
-        .feature-desc {
-            font-size: 15px; line-height: 1.8; color: #e0e0e0; margin-bottom: 20px; text-align: justify;
+        .intro-text {
+            font-size: 12px;
+            color: #333;
             font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.3px;
         }
-        .feature-list li {
-            display: flex; align-items: center; gap: 12px;
-            margin-bottom: 12px; font-size: 14px; color: #bf953f; font-weight: 700;
-            transition: transform 0.2s;
-        }
-        .feature-list li:hover { transform: translateX(5px); }
-        
-        .pricing-grid { display: grid; gap: 20px; animation: fadeUp 1s ease-out; }
-        .plan-card {
-            background: linear-gradient(145deg, #181818, #0e0e0e);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 15px; padding: 25px;
-            display: flex; justify-content: space-between; align-items: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
-        }
-        .plan-card:hover { border-color: #bf953f; transform: scale(1.02); box-shadow: 0 10px 25px rgba(0,0,0,0.7); }
-        .plan-card.vip-highlight { 
-            border: 1px solid rgba(191, 149, 63, 0.5); 
-            background: linear-gradient(145deg, #2a200a, #0a0a0a); 
-        }
-        .plan-name { font-weight: 800; font-size: 18px; color: #fff; }
-        .plan-price { font-family: 'Share Tech Mono', monospace; font-size: 22px; color: #bf953f; text-shadow: 0 0 10px rgba(191, 149, 63, 0.3); }
 
-        .vip-input {
-            width: 100%; padding: 15px; margin-bottom: 20px; box-sizing: border-box;
-            background: rgba(0,0,0,0.5); border: 1px solid #333; color: #bf953f;
-            text-align: center; font-family: 'Share Tech Mono'; font-size: 20px; letter-spacing: 4px;
-            border-radius: 10px; outline: none; transition: 0.3s;
-        }
-        .vip-input:focus { border-color: #ff0033; box-shadow: 0 0 15px rgba(255, 0, 51, 0.2); }
-
-        .vip-activate-btn {
+        /* زر المتابعة الصغير */
+        #continue-btn {
+            display: none;
             background: #000;
-            color: #fff; font-weight: 800; border: 2px solid #ff0033;
-            padding: 18px 30px; border-radius: 40px; cursor: pointer;
-            font-family: 'Cairo', sans-serif; font-size: 18px;
-            box-shadow: 0 0 20px rgba(255, 0, 51, 0.2);
-            transition: 0.3s; width: 100%; position: relative; overflow: hidden;
-            display: flex; justify-content: center; align-items: center; gap: 10px;
+            color: #fff;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease, background 0.2s;
+            opacity: 0;
+            transform: translateY(10px);
         }
-        .vip-activate-btn::after {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(255,0,51,0.2) 0%, transparent 60%);
-            transform: scale(0); transition: transform 0.5s;
-        }
-        .vip-activate-btn:active::after { transform: scale(1); }
-        .vip-activate-btn:active { transform: scale(0.96); }
 
-        /* =========================================
-           TWEAK: WHATSAPP BUTTON (Green/Black + Animated Border)
-           ========================================= */
-        .whatsapp-contact-btn {
-            position: relative;
-            display: flex; align-items: center; justify-content: center; gap: 15px;
-            padding: 20px; border-radius: 15px; 
-            text-decoration: none;
-            margin-top: 20px; overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0, 255, 65, 0.2);
-            /* Reset Default */
+        #continue-btn.show {
+            display: block;
+            animation: fadeInUp 0.5s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* تأثير الحركة للذهاب لليسار */
+        #center-intro.move-left {
+            left: 20px; /* التوجه لأقصى اليسار */
+            transform: translate(0, -50%) scale(0.5); /* التصغير أثناء الحركة */
+            opacity: 0; /* الاختفاء التدريجي */
+        }
+
+        /* ========================================================
+           القائمة الجانبية (Sidebar)
+           ======================================================== */
+        #left-sidebar {
+            position: absolute;
+            top: 50%;
+            left: 15px; /* تثبيت في الجهة اليسرى */
+            transform: translateY(-50%) scale(0.5);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 10px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); /* تأثير ارتداد ناعم */
+            visibility: hidden;
+        }
+
+        #left-sidebar.active {
+            opacity: 1;
+            transform: translateY(-50%) scale(1);
+            visibility: visible;
+        }
+
+        .social-icon-btn {
             background: transparent;
-            color: white; font-weight: 900; font-size: 16px;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 12px;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* The Rotating Green Border */
-        .whatsapp-contact-btn::before {
-            content: ''; position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: conic-gradient(transparent, #00ff41, transparent 30%);
-            animation: borderRotate 2s linear infinite;
-            z-index: 0;
+        .social-icon-btn:hover {
+            background: rgba(255, 0, 0, 0.1);
         }
 
-        /* The Inner Button Background (Black/Green Dark) */
-        .whatsapp-contact-btn::after {
-            content: ''; position: absolute;
-            inset: 2px; /* 2px border width */
-            background: linear-gradient(to bottom, #0a220a, #000000);
-            border-radius: 13px; 
-            z-index: 1;
+        .social-icon-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: #FF0000; /* لون يوتيوب */
         }
 
-        /* Content layer to sit on top */
-        .whatsapp-contact-btn span {
-            position: relative; z-index: 2;
+        /* ========================================================
+           النافذة الجانبية للمحتوى (Panel)
+           ======================================================== */
+        #social-panel {
+            position: absolute;
+            top: 3vh; /* ترك مسافة بسيطة من الأعلى */
+            left: 80px; /* تظهر بجانب القائمة الجانبية */
+            height: 94vh; /* ارتفاع أقل من الشاشة بقليل */
+            width: 50vw; /* نصف الشاشة تقريباً */
+            min-width: 260px;
+            max-width: 400px;
+            background: rgba(250, 250, 250, 0.95);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 24px;
+            box-shadow: 15px 0 50px rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transform: translateX(-30px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        #toast-container {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            z-index: 100000; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 350px;
+        #social-panel.open {
+            transform: translateX(0);
+            opacity: 1;
+            visibility: visible;
         }
-        .toast {
-            background: rgba(10, 10, 10, 0.95); border-left: 4px solid;
-            padding: 15px; border-radius: 4px; color: #fff; font-size: 13px; font-weight: 600;
-            display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            animation: slideDownFade 0.4s;
-        }
-        .toast.error { border-color: #ff3333; }
-        .toast.success { border-color: #00ff41; background: rgba(0, 20, 0, 0.95); }
-        @keyframes slideDownFade { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .success-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 100001;
-            display: none; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; backdrop-filter: blur(10px);
+        /* تصميم داخلي للنافذة (جاهز للمستقبل) */
+        .panel-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
         }
-        .success-overlay.show { display: flex; animation: fadeIn 0.5s; }
-        .success-icon { font-size: 80px; margin-bottom: 20px; animation: bounce 1s infinite; }
-        .success-title { color: #bf953f; font-size: 30px; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; }
-        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
+        .panel-header h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #111;
+        }
+
+        .panel-content {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* مساحة فارغة منظمة كعينة للروابط المستقبلية */
+        .placeholder-box {
+            height: 60px;
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px dashed rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
 
-    <div id="vip-badge" style="display:none; position:fixed; top:3cm; right:10px; background:linear-gradient(135deg, #bf953f, #fcf6ba); color:#3e2202; padding:5px 12px; border-radius:20px; font-family:'Share Tech Mono'; font-weight:bold; font-size:12px; z-index:950; box-shadow:0 0 10px rgba(191,149,63,0.5); align-items:center; gap:5px;">
-        <span>VIP</span><span>ACTIVATED</span><span style="color:#00ff41">●</span>
-    </div>
-
-    <div class="vip-header">
-        <div class="hacker-top-bar">
-            <span>[ SYSTEM :: <span style="color:#bf953f">ROOT</span> ]</span>
-            <span class="blink-text">● LOCAL CONNECTION</span>
-            <span>v2.4.0</span>
-        </div>
-        <div class="digital-clock-container">
-            <div id="vip-clock" class="digital-clock">00:00:00</div>
-        </div>
-        <div class="hacker-bottom-bar">
-            <div class="stat-item"><span class="stat-icon">⚡</span><span>DEVICE TIME SYNC</span></div>
-            <div style="color: #666">|</div>
-            <div class="stat-item"><span>توقيت الجهاز المحلي</span><span style="color:#00ff41">✔</span></div>
-        </div>
-        <div class="luxury-bottom-frame"></div>
-    </div>
-
-    <div class="security-ticker-bar">
-        <div class="ticker-track">
-            <div class="msg-item"><span class="msg-dot">●</span><span class="msg-title">SERVER SECURITY NOTICE:</span><span class="msg-text">نوصيك بعدم تخطي ربح 10,000,000 عملة يوميًا حتى لا تتعرض لأي مخاطر من نظام حماية التطبيق.</span></div>
-            <div class="msg-item"><span class="msg-dot">●</span><span class="msg-title">CHINA TIME SYNC:</span><span class="msg-text">هذا التطبيق مرتبط بتوقيت الساعة عبر أقوى السيرفرات الصينية العالمية لضمان التزامن الكامل.</span></div>
-            <div class="msg-item"><span class="msg-dot">●</span><span class="msg-title">GLOBAL PLATFORM NETWORK:</span><span class="msg-text">Xena Live – TopTop – SOMatch – SUGO – Hiya – Mika – Hiyoo – Yalla</span></div>
-            <div class="msg-item"><span class="msg-dot">●</span><span class="msg-title">WORLD SERVER UPDATE:</span><span class="msg-text">نطلق تحديثات السيرفر وفق التوقيت العالمي الموحد لضمان أعلى استقرار وأمان.</span></div>
-            <div class="msg-item"><span class="msg-dot">●</span><span class="msg-title">GAME SERVER PROTECTION:</span><span class="msg-text">التطبيق يدعم سيرفرًا مضبوطًا ومتزامنًا مع توقيت اللعبة العالمي بأعلى مستوى أمان.</span></div>
-            <div class="msg-item"><span class="msg-dot">●</span><span class="msg-title">SYSTEM:</span><span class="msg-text">RE-CONNECTING SECURE TUNNEL...</span></div>
-        </div>
-    </div>
-
-    <div class="image-container">
-        <div class="image-wrapper">
-            <div class="luxury-top-frame"></div>
-            <div class="luxury-bottom-frame"></div>
-            <div class="countdown-timer" id="timer-display">
-                <span class="big-symbol">s.</span><span id="time-val">20</span>
+    <div id="social-overlay-system">
+        
+        <div id="center-intro" class="interactive-element">
+            <div id="loading-view" style="text-align: center;">
+                <div class="mini-loader"></div>
+                <p class="intro-text">مواقع التواصل الاجتماعي أصبحت مدعومة</p>
             </div>
-            
-            <span class="emoji one" id="item-chick">😈<span class="engraved-on-head">كتكوت</span></span>
-            <span class="emoji two" id="item-tomato">😈<span class="engraved-on-head">طماطم</span></span>
-            <span class="emoji three" id="item-corn">😈<span class="engraved-on-head">ذره</span></span>
-            <span class="emoji four" id="item-cow">😈<span class="engraved-on-head">بقرة</span></span>
-            <span class="emoji five" id="item-shrimp">😈<span class="engraved-on-head">جمبري</span></span>
-            <span class="emoji six" id="item-pepper">😈<span class="engraved-on-head">فلفل</span></span>
-            <span class="emoji seven" id="item-carrot">😈<span class="engraved-on-head">جزر</span></span>
-            <span class="emoji eight" id="item-fish">😈<span class="engraved-on-head">سمكه</span></span>
-
-            <img src="https://iili.io/f6v88WF.jpg" alt="صورة العرض">
-        </div>
-    </div>
-
-    <button class="apk-luxury-btn" id="actionBtn">
-        <div class="btn-mask"></div>
-        <div class="btn-content" id="btnContent">
-            <span class="btn-text-main" id="btnTextMain">بدء استكشاف نتائج</span>
-            <span class="btn-text-sub" id="btnTextSub">AI PREDICTION SYSTEM</span>
-        </div>
-    </button>
-
-    <div id="nav-loader">
-        <div class="loader-spinner"></div>
-        <div style="color:#fff; margin-top:10px; font-family:'Share Tech Mono';">RETURNING...</div>
-    </div>
-
-    <div id="subscription-page">
-        <button id="back-to-home" class="back-btn">
-            <span>➜</span> <span>الرجوع</span>
-        </button>
-
-        <div class="bg-anim-layer">
-            <div class="stars-bg"></div>
-            <div class="bubble" style="left: 10%; animation-duration: 8s;"></div>
-            <div class="bubble" style="left: 30%; animation-duration: 12s; animation-delay: 2s;"></div>
-            <div class="bubble" style="left: 70%; animation-duration: 10s; animation-delay: 1s;"></div>
-            <div class="bubble" style="left: 90%; animation-duration: 15s; animation-delay: 0.5s;"></div>
+            <button id="continue-btn">متابعة</button>
         </div>
 
-        <div class="sub-header">
-            <h1 class="vip-title">PREMIUM ACCESS</h1>
-            <div class="vip-subtitle" style="color:#888; margin-top:10px; font-weight:600;">بوابة العبور إلى الاحترافية</div>
+        <div id="left-sidebar" class="interactive-element">
+            <button class="social-icon-btn" id="youtube-btn" title="YouTube">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21.582,6.186c-0.23-0.86-0.908-1.538-1.768-1.768C18.254,4,12,4,12,4S5.746,4,4.186,4.418 c-0.86,0.23-1.538,0.908-1.768,1.768C2,7.746,2,12,2,12s0,4.254,0.418,5.814c0.23,0.86,0.908,1.538,1.768,1.768 C5.746,20,12,20,12,20s6.254,0,7.814-0.418c0.86-0.23,1.538-0.908,1.768-1.768C22,16.254,22,12,22,12S22,7.746,21.582,6.186z M9.6,15.2V8.8L15.6,12L9.6,15.2z"/>
+                </svg>
+            </button>
         </div>
 
-        <div class="sub-content">
-            <div class="glass-box">
-                <h3 style="color:#bf953f; margin-top:0; border-bottom:1px solid #333; padding-bottom:10px;">الاشتراك في توقع 5 اختيارات</h3>
-                <p class="feature-desc">
-                    مرحبًا بك في المستوى التالي من التحليل الرقمي. يمنحك هذا الاشتراك إمكانية استكشاف 5 اختيارات دقيقة للعب عليها في كل جولة، مع خوارزميات متقدمة تمنحك الأفضلية الدائمة في الوصول للتوقعات قبل الجميع.
-                    الاشتراك مصمم خصيصًا للنخبة الباحثين عن تجربة أسرع، أدق، وأكثر احترافية.
-                </p>
-                <ul class="feature-list">
-                    <li><span>✔</span> أولوية قصوى في معالجة التوقعات</li>
-                    <li><span>✔</span> دعم فني VIP مخصص على مدار الساعة</li>
-                    <li><span>✔</span> ضمان 15 جولة صحيحة متتالية</li>
-                    <li><span>✔</span> نظام حماية مزدوج (Double-Blind)</li>
-                    <li><span>✔</span> تجربة خالية من الانتظار والإعلانات</li>
-                </ul>
+        <div id="social-panel" class="interactive-element">
+            <div class="panel-header">
+                <h3>منصات التواصل</h3>
             </div>
-
-            <div class="pricing-grid">
-                <div class="plan-card">
-                    <span class="plan-name">الاشتراك الشهري</span>
-                    <span class="plan-price">$100</span>
-                </div>
-                <div class="plan-card">
-                    <span class="plan-name">اشتراك 5 شهور</span>
-                    <span class="plan-price">$500</span>
-                </div>
-                <div class="plan-card vip-highlight">
-                    <div style="position:absolute; top:0; right:0; background:#bf953f; color:#000; font-size:10px; padding:3px 8px; font-weight:bold;">BEST VALUE</div>
-                    <span class="plan-name" style="color:#bf953f">عرض VIP السنوي</span>
-                    <span class="plan-price">$1000</span>
-                </div>
+            <div class="panel-content">
+                <div class="placeholder-box">مساحة لزر يوتيوب</div>
+                <div class="placeholder-box">مساحة لزر تيليجرام</div>
+                <div class="placeholder-box">مساحة لزر فيسبوك</div>
             </div>
-
-            <div class="glass-box" id="activation-panel" style="text-align:center;">
-                <h3 style="color:#fff; margin-bottom:20px;">تفعيل الاشتراك</h3>
-                <input type="text" id="vip-code-input" class="vip-input" placeholder="أدخل كود التفعيل">
-                <button class="vip-activate-btn" id="activate-btn">
-                    <span>تفعيل الآن</span>
-                    <span>🚀</span>
-                </button>
-            </div>
-
-            <a href="https://wa.me/201202230265?text=%D9%85%D8%B1%D8%AD%D8%A8%D9%8B%D8%A7%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AE%D8%B7%D8%A9%20%D8%AA%D9%88%D9%82%D8%B9%20%D8%A7%D9%84%D9%805%20%D8%A7%D8%AE%D8%AA%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%81%D9%8A%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D8%A7%D8%B3%D8%AA%D9%83%D8%B4%D8%A7%D9%81%20%D9%86%D8%AA%D8%A7%D8%A6%D8%AC%20%D9%84%D8%B9%D8%A8%D8%A9%20%D8%A7%D9%84%D9%85%D8%B2%D8%B1%D8%B9%D8%A9" class="whatsapp-contact-btn" target="_blank">
-                <span style="font-size:24px">📱</span>
-                <span>تواصل لطلب كود التفعيل (WhatsApp)</span>
-            </a>
         </div>
-    </div>
 
-    <div class="success-overlay" id="success-overlay">
-        <div class="success-icon">👑</div>
-        <div class="success-title">مبروك!</div>
-        <div style="color:#fff; font-size:18px; font-weight:600;">تم تفعيل اشتراك VIP بنجاح</div>
-        <div style="color:#888; font-size:14px; margin-top:10px;">استمتع بالتجربة الكاملة</div>
     </div>
-
-    <div id="toast-container"></div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            
-            // --- Basic Clock ---
-            const clockEl = document.getElementById('vip-clock');
-            function updateClock() {
-                const now = new Date();
-                const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' });
-                clockEl.innerText = timeStr;
-            }
-            setInterval(updateClock, 1000); updateClock();
+        document.addEventListener("DOMContentLoaded", () => {
+            // تعريف العناصر
+            const loadingView = document.getElementById('loading-view');
+            const continueBtn = document.getElementById('continue-btn');
+            const centerIntro = document.getElementById('center-intro');
+            const leftSidebar = document.getElementById('left-sidebar');
+            const youtubeBtn = document.getElementById('youtube-btn');
+            const socialPanel = document.getElementById('social-panel');
 
-            // --- Variables ---
-            const btn = document.getElementById('actionBtn');
-            const btnContent = document.getElementById('btnContent');
-            const btnTextMain = document.getElementById('btnTextMain');
-            const btnTextSub = document.getElementById('btnTextSub');
-            const subPage = document.getElementById('subscription-page');
-            
-            const timerContainer = document.getElementById('timer-display');
-            const timeVal = document.getElementById('time-val');
-            
-            const emojiIds = ['item-chick', 'item-tomato', 'item-corn', 'item-cow', 'item-shrimp', 'item-pepper', 'item-carrot', 'item-fish'];
-            const CHICK_ID = 'item-chick';
-            const SPECIAL_MINUTES = [58, 0, 48, 37]; 
-            const VIP_KEY = 'hacker_vip_status';
-            const VIP_EXPIRY_KEY = 'hacker_vip_expiry';
-            const TRUE_CODE = 'sbsjbz532';
+            // الخطوة 1 & 2: بعد ثانيتين إخفاء التحميل وإظهار الزر
+            setTimeout(() => {
+                loadingView.style.display = 'none';
+                continueBtn.classList.add('show');
+            }, 2000);
 
-            let isGameRunning = false;
-            let animationFrameId = null;
-            let spinInterval = null;
-            let roundWinners = [];
-            let revealHasStarted = false;
-            let seedValue = 0;
-
-            // --- Helper Functions ---
-            const delay = ms => new Promise(res => setTimeout(res, ms));
-            function setSeed(val) { seedValue = val; }
-            function seededRandom() { seedValue = (seedValue * 9301 + 49297) % 233280; return seedValue / 233280; }
-            function shuffleArraySeeded(array) {
-                let currentIndex = array.length, temporaryValue, randomIndex;
-                while (0 !== currentIndex) {
-                    randomIndex = Math.floor(seededRandom() * currentIndex);
-                    currentIndex -= 1;
-                    temporaryValue = array[currentIndex];
-                    array[currentIndex] = array[randomIndex];
-                    array[randomIndex] = temporaryValue;
-                }
-                return array;
-            }
-
-            // --- Intro Animation ---
-            async function runIntroAnimation() {
-                timerContainer.classList.remove('show-timer');
-                btn.classList.add('disabled');
-                const totalDuration = 2000; 
-                const timePerItem = totalDuration / emojiIds.length;
-                for (let i = 0; i < emojiIds.length; i++) {
-                    const el = document.getElementById(emojiIds[i]);
-                    if (el) {
-                        el.classList.add('visible'); el.classList.add('active-selection'); 
-                        await delay(timePerItem);
-                        el.classList.remove('visible'); el.classList.remove('active-selection');
-                    }
-                }
-                btn.classList.remove('disabled');
-            }
-            await runIntroAnimation();
-
-            // --- VIP Check Logic ---
-            function isVIP() {
-                const status = localStorage.getItem(VIP_KEY);
-                const expiry = localStorage.getItem(VIP_EXPIRY_KEY);
-                if (status === 'active' && expiry) {
-                    if (Date.now() < parseInt(expiry)) return true;
-                    else { localStorage.removeItem(VIP_KEY); localStorage.removeItem(VIP_EXPIRY_KEY); return false; }
-                }
-                return false;
-            }
-
-            // --- UI Updates based on State ---
-            function updateButtonState() {
-                const vip = isVIP();
-                if (vip) {
-                    document.getElementById('vip-badge').style.display = 'flex';
-                    if (!isGameRunning) {
-                        // VIP Idle
-                        btnTextMain.innerText = "بدء استكشاف نتائج";
-                        btnTextMain.classList.add('highlight-yellow');
-                        btnTextSub.innerText = "VIP SYSTEM READY";
-                    }
-                } else {
-                    // Non-VIP
-                    document.getElementById('vip-badge').style.display = 'none';
-                    btnTextMain.innerText = "بدء استكشاف نتائج";
-                    btnTextMain.classList.remove('highlight-yellow');
-                    btnTextSub.innerText = "TAP TO EXPLORE";
-                }
-            }
-            updateButtonState();
-
-            // --- Main Interaction Logic ---
-            btn.addEventListener('click', async (e) => {
-                if (isGameRunning) return;
-
-                const vip = isVIP();
-
-                playButtonEffects(e);
-
-                if (!vip) {
-                    // --- NON-VIP FLOW ---
-                    // 1. Show Loading on Button
-                    const oldContent = btnContent.innerHTML;
-                    btn.classList.add('disabled');
-                    btnContent.innerHTML = `<div class="btn-mini-loader"></div><div class="btn-text-sub" style="color:#fff;">CHECKING SERVER...</div>`;
-                    
-                    // 2. Wait 3 Seconds
-                    await delay(3000);
-
-                    // 3. Reset Button (in background)
-                    btnContent.innerHTML = oldContent;
-                    btn.classList.remove('disabled');
-
-                    // 4. Navigate to Subscription Page
-                    subPage.classList.add('visible');
-
-                } else {
-                    // --- VIP FLOW (Immediate Start) ---
-                    // 1. Change UI to Active
-                    btnTextMain.innerText = "جاري استكشاف النتائج";
-                    btnTextSub.innerText = "PROCESSING DATA...";
-                    
-                    // 2. Start Game Logic
-                    const clickTime = new Date();
-                    const currentMinute = clickTime.getMinutes();
-                    const seed = Math.floor(clickTime.getTime() / 1000);
-                    setSeed(seed);
-                    roundWinners = determineWinners(currentMinute);
-                    startRound();
-                }
-            });
-
-            // --- TWEAK: Back to Home Logic ---
-            const backBtn = document.getElementById('back-to-home');
-            const navLoader = document.getElementById('nav-loader');
-            
-            backBtn.addEventListener('click', async () => {
-                // Show loader
-                navLoader.classList.add('show');
-                // Wait short delay
-                await delay(800);
-                // Hide Sub Page
-                subPage.classList.remove('visible');
-                // Hide Loader
-                navLoader.classList.remove('show');
-            });
-
-            // --- Game Logic ---
-            function determineWinners(minute) {
-                const isChickMinute = SPECIAL_MINUTES.includes(minute);
-                let finalSelection = [];
-                if (isChickMinute) {
-                    finalSelection.push(CHICK_ID);
-                    let remaining = emojiIds.filter(id => id !== CHICK_ID);
-                    shuffleArraySeeded(remaining); 
-                    finalSelection = finalSelection.concat(remaining.slice(0, 4));
-                } else {
-                    let pool = emojiIds.filter(id => id !== CHICK_ID);
-                    shuffleArraySeeded(pool);
-                    finalSelection = pool.slice(0, 5);
-                }
-                return shuffleArraySeeded(finalSelection);
-            }
-
-            function startRound() {
-                isGameRunning = true;
-                btn.classList.add('disabled');
-                timerContainer.classList.add('show-timer');
-                revealHasStarted = false;
-
-                // Hide current
-                emojiIds.forEach(id => {
-                    const el = document.getElementById(id);
-                    if(el) { el.classList.remove('visible'); el.classList.remove('active-selection'); el.style.opacity = ''; }
-                });
-
-                const durationSeconds = 20;
-                const endTime = Date.now() + (durationSeconds * 1000);
-
-                startSpinEffect();
-                function updateLoop() {
-                    const now = Date.now();
-                    const remainingSeconds = Math.ceil((endTime - now) / 1000);
-
-                    if (remainingSeconds >= 0) timeVal.innerText = remainingSeconds;
-
-                    if (remainingSeconds <= 15 && !revealHasStarted) {
-                        stopSpinEffect();
-                        revealWinnersSequence(roundWinners);
-                        revealHasStarted = true;
-                    }
-
-                    if (remainingSeconds <= 0) {
-                        endRound();
-                        return;
-                    }
-                    animationFrameId = requestAnimationFrame(updateLoop);
-                }
-                animationFrameId = requestAnimationFrame(updateLoop);
-            }
-
-            function startSpinEffect() {
-                if (spinInterval) clearInterval(spinInterval);
-                spinInterval = setInterval(() => {
-                    const randomIdx = Math.floor(Math.random() * emojiIds.length);
-                    const el = document.getElementById(emojiIds[randomIdx]);
-                    el.style.opacity = '0.7';
-                    setTimeout(() => { if (!el.classList.contains('visible')) el.style.opacity = '0'; }, 150);
-                }, 150);
-            }
-
-            function stopSpinEffect() {
-                if (spinInterval) clearInterval(spinInterval);
-                emojiIds.forEach(id => document.getElementById(id).style.opacity = '');
-            }
-
-            async function revealWinnersSequence(winners) {
-                const stepDelay = 400;
-                for (let i = 0; i < winners.length; i++) {
-                    if (!isGameRunning) break;
-                    const el = document.getElementById(winners[i]);
-                    if (el) { el.classList.add('visible'); el.classList.add('active-selection'); }
-                    await delay(stepDelay);
-                }
-            }
-
-            function endRound() {
-                cancelAnimationFrame(animationFrameId);
-                stopSpinEffect();
-                if (roundWinners.length > 0) {
-                     emojiIds.forEach(id => {
-                        const el = document.getElementById(id);
-                        if (roundWinners.includes(id)) { el.classList.add('visible'); el.classList.add('active-selection'); }
-                        else { el.classList.remove('visible'); el.classList.remove('active-selection'); }
-                     });
-                     timeVal.innerText = "0";
-                }
-                isGameRunning = false;
-                timerContainer.classList.remove('show-timer');
+            // الخطوة 3: عند الضغط على "متابعة"
+            continueBtn.addEventListener('click', () => {
+                // تفعيل حركة الانتقال لليسار
+                centerIntro.classList.add('move-left');
                 
+                // بعد انتهاء حركة المنتصف، نظهر القائمة الجانبية بسلاسة
                 setTimeout(() => {
-                    emojiIds.forEach(id => {
-                        const el = document.getElementById(id);
-                        if(el) { el.classList.remove('visible'); el.classList.remove('active-selection'); }
-                    });
-                    
-                    // Re-enable button with New Text (VIP ONLY behavior)
-                    btn.classList.remove('disabled');
-                    btnTextMain.innerText = "بدء جولة استكشاف نتائج جديدة";
-                    
-                }, 1000);
-            }
-
-            // --- Effects ---
-            function playButtonEffects(e) {
-                const circle = document.createElement('span');
-                const diameter = Math.max(btn.clientWidth, btn.clientHeight);
-                const radius = diameter / 2;
-                const rect = btn.getBoundingClientRect();
-                circle.style.width = circle.style.height = `${diameter}px`;
-                circle.style.left = `${e.clientX - rect.left - radius}px`;
-                circle.style.top = `${e.clientY - rect.top - radius}px`;
-                circle.classList.add('ripple');
-                const oldRipple = btn.querySelector('.ripple');
-                if (oldRipple) oldRipple.remove();
-                btn.appendChild(circle);
-                createStars(e.clientX, e.clientY);
-            }
-
-            function createStars(x, y) {
-                const particleCount = 12;
-                for (let i = 0; i < particleCount; i++) {
-                    const star = document.createElement('div');
-                    star.classList.add('star-particle');
-                    document.body.appendChild(star);
-                    star.style.left = x + 'px';
-                    star.style.top = y + 'px';
-                    const angle = Math.random() * Math.PI * 2;
-                    const velocity = 80 + Math.random() * 100;
-                    const tx = Math.cos(angle) * velocity + 'px';
-                    const ty = Math.sin(angle) * velocity + 'px';
-                    star.style.setProperty('--tx', tx);
-                    star.style.setProperty('--ty', ty);
-                    setTimeout(() => star.remove(), 800);
-                }
-            }
-
-            // --- Activation Logic ---
-            const activateBtn = document.getElementById('activate-btn');
-            const codeInput = document.getElementById('vip-code-input');
-            const successOverlay = document.getElementById('success-overlay');
-
-            activateBtn.addEventListener('click', async () => {
-                const code = codeInput.value.trim();
-                if (!code) { showToast('يرجى إدخال كود التفعيل', 'error'); return; }
-
-                if (code === TRUE_CODE) {
-                    const oneMonth = 30 * 24 * 60 * 60 * 1000;
-                    localStorage.setItem(VIP_KEY, 'active');
-                    localStorage.setItem(VIP_EXPIRY_KEY, (Date.now() + oneMonth).toString());
-
-                    // Close Sub Page & Show Success
-                    subPage.classList.remove('visible'); // Hide Sub immediately
-                    successOverlay.classList.add('show');
-                    
-                    await delay(3000);
-                    successOverlay.classList.remove('show');
-                    showToast('تم تفعيل مميزات VIP بنجاح', 'success');
-                    updateButtonState();
-                } else {
-                    showToast('كود التفعيل غير صحيح', 'error');
-                }
+                    centerIntro.style.display = 'none'; // إخفاء الحاوية القديمة نهائياً
+                    leftSidebar.classList.add('active'); // إظهار القائمة الجانبية
+                }, 500); // 500ms متوافقة مع سرعة الانتقال في الـ CSS
             });
 
-            function showToast(message, type = 'info') {
-                const container = document.getElementById('toast-container');
-                const toast = document.createElement('div');
-                toast.className = `toast ${type}`;
-                toast.innerHTML = `<span>${message}</span>`;
-                container.appendChild(toast);
-                setTimeout(() => {
-                    toast.style.opacity = '0';
-                    setTimeout(() => toast.remove(), 300);
-                }, 3000);
-            }
+            // الخطوة 4 & 5: إظهار النافذة عند الضغط على أيقونة يوتيوب
+            youtubeBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // منع انتقال الضغطة للـ document
+                socialPanel.classList.toggle('open');
+            });
+
+            // الخطوة 6: الإغلاق التلقائي عند الضغط في أي مكان بالخارج
+            document.addEventListener('click', (event) => {
+                const isPanelOpen = socialPanel.classList.contains('open');
+                const clickedInsidePanel = socialPanel.contains(event.target);
+                const clickedOnSidebar = leftSidebar.contains(event.target);
+
+                // إذا كانت النافذة مفتوحة والضغط كان خارج النافذة وخارج القائمة الجانبية
+                if (isPanelOpen && !clickedInsidePanel && !clickedOnSidebar) {
+                    socialPanel.classList.remove('open');
+                }
+            });
+            
+            // منع إغلاق النافذة عند النقر بداخلها
+            socialPanel.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
         });
     </script>
 </body>
 </html>
+
