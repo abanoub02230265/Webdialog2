@@ -1,337 +1,963 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <title>VIP Premium System - Ultimate Edition</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DPMods Cyber ID Ultra VIP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
     <style>
-        :root {
-            --bg-dark: #030305;
-            --bg-metal: #09090e;
-            --neon-purple: #bd00ff;
-            --neon-cyan: #00f0ff;
-            --neon-red: #ff0055;
-            --text-main: #ffffff;
-            --text-dim: #6c6c7e;
-            --font-sys: 'Courier New', Courier, monospace;
-        }
-
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            user-select: none;
-        }
-
-        body {
-            margin: 0; padding: 0;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: var(--font-sys);
-            width: 100vw; height: 100vh;
-            overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
-            perspective: 1000px;
-        }
-
-        /* --- BACKGROUND MATRIX CANVAS --- */
-        #matrixCanvas {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1; opacity: 0.15; pointer-events: none;
-        }
-
-        /* --- THE FLOATING 3D CYBER CARD --- */
-        .card-container {
-            position: relative; z-index: 10;
-            width: 92%; max-width: 380px;
-            aspect-ratio: 5 / 8; max-height: 85vh;
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease;
-        }
-
-        .cyber-card {
-            width: 100%; height: 100%;
-            background-color: var(--bg-metal);
+        /* =========================================
+           CORE SYSTEM STYLES & ANIMATED BACKGROUND
+           ========================================= */
+        body, html {
+            margin: 0;
+            padding: 0; height: 100%; width: 100%;
+            overflow: hidden; font-family: sans-serif;
+            background-color: #000000;
+            /* Background Pattern */
             background-image: 
-                radial-gradient(circle at 50% 50%, rgba(213, 0, 255, 0.05), transparent),
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 15px 15px, 15px 15px;
-            position: relative;
-            clip-path: polygon(12% 0, 100% 0, 100% 88%, 88% 100%, 0 100%, 0 12%);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 240, 255, 0.05);
-            animation: bootUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+                linear-gradient(45deg, rgba(255, 215, 0, 0.05) 25%, transparent 25%, transparent 75%, rgba(0, 255, 255, 0.05) 75%, rgba(0, 255, 255, 0.05)),
+                linear-gradient(45deg, rgba(0, 255, 255, 0.05) 25%, transparent 25%, transparent 75%, rgba(255, 215, 0, 0.05) 75%, rgba(255, 215, 0, 0.05));
+            background-position: 0 0, 20px 20px;
+            background-size: 40px 40px;
+            /* TWEAK: Falling Animation added to body background */
+            animation: bgFall 4s linear infinite;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .cyber-card::before {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            border: 2px solid var(--neon-purple); pointer-events: none;
-            clip-path: polygon(12% 0, 100% 0, 100% 88%, 88% 100%, 0 100%, 0 12%);
-            opacity: 0.4; animation: neonGlow 2s infinite ease-in-out;
+        /* Animation for Falling Squares */
+        @keyframes bgFall {
+            0% { background-position: 0 0, 20px 20px; }
+            100% { background-position: 0 80px, 20px 100px; } /* Moves down vertically */
         }
 
-        /* --- GLITCH TEXT EFFECT --- */
-        .glitch-text {
-            position: relative;
-            animation: glitch 4s infinite;
+        /* HEADER */
+        .vip-header {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: 2.8cm;
+            display: flex; flex-direction: column;
+            justify-content: space-evenly; align-items: center;
+            z-index: 1000;
+            background-color: #0a0a0a;
+            background-image: 
+                linear-gradient(rgba(191, 149, 63, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(191, 149, 63, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.9), inset 0 0 30px rgba(0, 0, 0, 0.8);
         }
-        .glitch-text::before, .glitch-text::after {
-            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-metal);
+        .hacker-top-bar {
+            width: 90%; display: flex; justify-content: space-between; align-items: center;
+            font-family: 'Share Tech Mono', monospace; font-size: 11px; color: #00ff41;
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.5); margin-top: 5px; direction: ltr;
         }
-        .glitch-text::before { left: 2px; text-shadow: -1px 0 var(--neon-cyan); clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse; }
-        .glitch-text::after { left: -2px; text-shadow: -1px 0 var(--neon-purple); clip: rect(85px, 450px, 140px, 0); animation: glitch-anim 2s infinite linear alternate-reverse; }
-
-        /* --- PARTICLE SYSTEM --- */
-        #particles {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 2; overflow: hidden;
+        .blink-text { animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+        .digital-clock-container {
+            position: relative; padding: 0 15px;
+            border-left: 1px solid rgba(191, 149, 63, 0.3); border-right: 1px solid rgba(191, 149, 63, 0.3);
         }
-        .particle {
-            position: absolute; width: 2px; height: 2px;
-            background: var(--neon-cyan); border-radius: 50%; opacity: 0;
-            animation: floatUp infinite linear;
+        .digital-clock {
+            font-family: 'Share Tech Mono', monospace; font-size: 32px; font-weight: 400;
+            letter-spacing: 2px; white-space: nowrap;
+            background: linear-gradient(180deg, #fff 0%, #fcf6ba 40%, #bf953f 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 8px rgba(191, 149, 63, 0.4));
         }
-
-        /* --- TICKER MARQUEE --- */
-        .ticker-wrap {
-            position: absolute; top: 0; left: 12%; right: 0; height: 18px;
-            background: var(--neon-purple); color: #fff; overflow: hidden;
-            display: flex; align-items: center; z-index: 15;
-            clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%);
-            box-shadow: 0 2px 10px rgba(189, 0, 255, 0.4);
+        .hacker-bottom-bar {
+            width: 95%; display: flex; justify-content: center; gap: 15px;
+            font-family: 'Cairo', sans-serif; font-size: 10px; font-weight: 700;
+            color: #d4b469; text-transform: uppercase;
+            border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 2px; margin-bottom: 5px; z-index: 2;
         }
-        .ticker { display: flex; width: max-content; animation: marquee 10s linear infinite; }
-        .ticker span { white-space: nowrap; font-size: 8px; font-weight: 900; letter-spacing: 2px; padding-right: 20px; }
-
-        /* --- ANIMATIONS --- */
-        @keyframes bootUp { 0% { opacity: 0; transform: scale(0.9) translateZ(-50px); } 100% { opacity: 1; transform: scale(1) translateZ(0); } }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes spinRev { 100% { transform: rotate(-360deg); } }
-        @keyframes scanline { 0% { top: -5%; } 100% { top: 105%; } }
-        @keyframes floatUp { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.4; } 100% { transform: translateY(-150px); opacity: 0; } }
-        @keyframes neonGlow { 0%, 100% { filter: drop-shadow(0 0 2px var(--neon-purple)); opacity: 0.4; } 50% { filter: drop-shadow(0 0 8px var(--neon-purple)); opacity: 0.8; } }
-        @keyframes glitch-anim { 0% { clip: rect(15px, 9999px, 66px, 0); } 100% { clip: rect(34px, 9999px, 55px, 0); } }
-
-        /* --- CENTRAL PORTRAIT --- */
-        .portrait-wrapper {
-            position: absolute; top: 45px; left: 35px; right: 35px; bottom: 160px; 
-            background: url('https://raw.githubusercontent.com/DPModsYT/webbydpmods/refs/heads/main/IMG_20260514_135013.jpg') center/cover no-repeat;
-            border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 4px;
-            z-index: 1; overflow: hidden;
-            box-shadow: inset 0 0 20px #000;
-        }
-        .portrait-wrapper::after {
-            content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px;
-            background: var(--neon-cyan); box-shadow: 0 0 15px var(--neon-cyan);
-            animation: scanline 3s infinite linear; pointer-events: none;
+        .stat-item { display: flex; align-items: center; gap: 4px; }
+        .stat-icon { color: #ff0033; font-size: 12px; } 
+        .luxury-bottom-frame {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 0.2cm;
+            z-index: 50; pointer-events: none;
+            background: linear-gradient(to bottom, #bf953f, #fcf6ba, #b38728, #8a620e);
+            border-top: 1px solid #5a3a0a; box-shadow: 0 -2px 3px rgba(0, 0, 0, 0.3);
+            border-radius: 0 0 2px 2px;
         }
 
-        /* --- HARDWARE HUD --- */
-        .hardware-screws { position: absolute; top: 25px; left: 15px; display: flex; flex-direction: column; gap: 10px; z-index: 5; }
-        .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--neon-cyan); box-shadow: 0 0 8px var(--neon-cyan); }
-        .screw { width: 6px; height: 6px; border-radius: 50%; background: #222; }
-
-        /* --- RIGHT EDGE DATA SPECS --- */
-        .right-specs {
-            position: absolute; right: 10px; top: 40px; display: flex; gap: 12px; writing-mode: vertical-rl; z-index: 5;
+        /* TICKER */
+        .security-ticker-bar {
+            position: fixed; top: 2.8cm; left: 0; width: 100%; height: 0.6cm; 
+            background-color: #020202; z-index: 900;
+            display: flex; align-items: center; overflow: hidden;
+            font-family: 'Cairo', sans-serif; font-size: 11px; font-weight: 700;
+            color: #00ff41; text-shadow: 0 0 2px rgba(0, 255, 65, 0.3); direction: ltr;
         }
-        .spec-block { display: flex; flex-direction: column; gap: 2px; }
-        .spec-label { color: var(--text-dim); font-size: 7px; letter-spacing: 2px; font-weight: bold; }
-        .spec-value { color: var(--text-main); font-size: 9px; font-weight: bold; }
-        .spec-value.cyan { color: var(--neon-cyan); text-shadow: 0 0 5px var(--neon-cyan); }
-
-        /* --- BOTTOM LEFT PANEL --- */
-        .name-panel {
-            position: absolute; bottom: 70px; left: 0; width: 58%; 
-            background: rgba(5, 5, 8, 0.9); backdrop-filter: blur(5px);
-            padding: 10px 15px; border: 1px solid var(--neon-cyan); border-left: none;
-            clip-path: polygon(0 0, 85% 0, 100% 30%, 100% 100%, 0 100%);
-            z-index: 10;
+        .ticker-track {
+            white-space: nowrap; will-change: transform;
+            animation: tickerTunnelLeftToRight 80s linear infinite; display: flex; align-items: center;
         }
-        .name-label { color: var(--text-dim); font-size: 8px; letter-spacing: 1px; }
-        .name-value { color: #fff; font-size: 20px; font-weight: 900; letter-spacing: 1px; margin-bottom: 4px; text-shadow: 0 0 10px var(--neon-purple); }
-        .mission-value { color: var(--neon-cyan); font-size: 10px; font-weight: bold; }
+        .msg-item { display: inline-flex; align-items: center; margin-right: 60px; }
+        .msg-dot { color: #00ff41; margin-right: 8px; font-size: 10px; animation: blink 2s infinite; }
+        .msg-title { font-family: 'Share Tech Mono', monospace; font-weight: 400; letter-spacing: 1px; margin-right: 8px; text-transform: uppercase; }
+        .msg-text { color: #ccffda; font-weight: 600; }
+        @keyframes tickerTunnelLeftToRight { 0% { transform: translateX(-100%); } 100% { transform: translateX(100vw); } }
 
-        /* --- HUD TELEGRAM BUTTON --- */
-        .cyber-logo {
-            position: absolute; bottom: 70px; right: 20px;
-            display: flex; flex-direction: column; align-items: center; z-index: 10; cursor: pointer;
+        /* CONTENT */
+        .image-container {
+            position: fixed; top: 3.4cm; bottom: 6cm; left: 0; right: 0;
+            display: flex; justify-content: center; align-items: flex-start; z-index: 1;
         }
-        .crosshair {
-            width: 46px; height: 46px; border: 1px dashed var(--neon-cyan); border-radius: 50%;
-            position: relative; display: flex; justify-content: center; align-items: center;
-            background: rgba(0, 240, 255, 0.02); transition: all 0.3s;
+        .image-wrapper { position: relative; max-width: 100%; max-height: 100%; }
+        .image-wrapper img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .luxury-top-frame {
+            position: absolute; top: 0; left: 0; width: 100%; height: 0.2cm;
+            z-index: 50; pointer-events: none;
+            background: linear-gradient(to bottom, #bf953f, #fcf6ba, #b38728, #8a620e);
+            border-bottom: 1px solid #5a3a0a; box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+            border-radius: 2px 2px 0 0;
         }
-        .ring-1 { position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border: 1px solid var(--neon-purple); border-radius: 50%; opacity: 0.5; animation: spin 5s linear infinite; }
-        .tg-icon { width: 20px; height: 20px; fill: var(--neon-cyan); filter: drop-shadow(0 0 4px var(--neon-cyan)); }
-        .logo-text { font-size: 9px; font-weight: 900; letter-spacing: 2px; color: var(--text-dim); margin-top: 4px; }
-
-        .cyber-logo:hover .crosshair { transform: scale(1.1); border-color: var(--neon-purple); background: rgba(189, 0, 255, 0.1); }
-
-        /* --- ACTION CONSOLE --- */
-        .action-console {
-            position: absolute; bottom: 15px; left: 0; width: 100%;
-            display: flex; flex-direction: column; align-items: center; gap: 4px; z-index: 20;
-        }
-        .meta-text { font-size: 7px; color: var(--text-dim); letter-spacing: 1px; }
         
-        .init-btn {
-            background: transparent; border: 1px solid var(--neon-cyan); color: var(--neon-cyan);
-            padding: 12px 35px; font-family: var(--font-sys); font-size: 12px; font-weight: bold; letter-spacing: 2px;
-            cursor: pointer; transition: all 0.2s;
-            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
-            box-shadow: 0 0 15px rgba(0,240,255,0.1);
+        /* EMOJIS */
+        .emoji {
+            position: absolute; font-size: 60px; pointer-events: none;
+            display: inline-block; text-align: center; opacity: 0; 
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s ease; z-index: 10;
         }
-        .init-btn:hover { background: rgba(0, 240, 255, 0.1); box-shadow: 0 0 20px rgba(0,240,255,0.4); }
-        .init-btn:active { background: var(--neon-cyan); color: #000; }
+        .emoji.visible { opacity: 1; }
+        .emoji.active-selection::after {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 140%; height: 140%; transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(255, 50, 50, 0.4) 0%, rgba(255, 0, 0, 0) 70%);
+            border-radius: 50%; z-index: -1; animation: pulseRed 0.5s ease-in-out infinite;
+        }
+        @keyframes pulseRed {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+        }
+        .engraved-on-head {
+            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+            font-size: 13px; font-weight: 900; white-space: nowrap;
+            color: #2e002e; mix-blend-mode: multiply; opacity: 0.9;
+            text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2), 0px -1px 0px rgba(0, 0, 0, 0.5); z-index: 2;
+        }
+        .countdown-timer {
+            position: absolute; bottom: calc(0.25cm + 60px + 2.2cm); 
+            left: calc(50% + 0.1cm); transform: translateX(-50%);
+            font-size: 18px; font-weight: 900; color: #ffffff;
+            font-family: 'Arial', sans-serif; text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.6);
+            display: flex; align-items: baseline; direction: ltr; z-index: 100;
+            pointer-events: none; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .countdown-timer.show-timer { opacity: 1; }
+        .big-symbol { font-size: 18px; letter-spacing: -1px; margin-right: 3px; line-height: 1; }
 
-        /* SYSTEM OVERRIDE FLASH TRIGGER */
-        .system-critical {
-            animation: redAlert 0.3s ease infinite alternate;
+        /* Emoji Positions */
+        .emoji.one { top: 1cm; left: 50%; transform: translateX(-50%); }
+        .emoji.two { top: 2cm; left: calc(50% + 2.75cm); transform: translateX(-50%); }
+        .emoji.three { top: 2cm; left: calc(50% - 2.75cm + 0.15cm); transform: translateX(-50%); }
+        .emoji.four { top: calc(2cm + 2.5cm + 0.3cm); left: calc(50% + 2.75cm + 1cm + 2px + 0.15cm); transform: translateX(-50%); }
+        .emoji.five { top: calc(2cm + 2.5cm + 0.3cm); left: calc(50% - (2.75cm + 1cm + 2px)); transform: translateX(-50%); }
+        .emoji.six { top: calc(2cm + 2.5cm + 2.75cm + 0.3cm); left: calc((50% + 2.75cm + 1cm + 2px) - 1cm); transform: translateX(-50%); }
+        .emoji.seven { top: calc(2cm + 2.5cm + 2.75cm + 0.3cm); left: calc((50% - (2.75cm + 1cm + 2px)) + 1cm + 0.15cm); transform: translateX(-50%); }
+        .emoji.eight { bottom: 0.25cm; left: calc(50% + 0.1cm); transform: translateX(-50%); }
+
+        /* =========================================
+           MAIN BUTTON STYLES (Lifted UP 2cm)
+           ========================================= */
+        .apk-luxury-btn {
+            position: fixed;
+            /* TWEAK: Raised up by approx 2cm (Original 30px + ~75px) */
+            bottom: 105px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            width: calc(100% - 1cm); 
+            height: 2.2cm;
+            z-index: 200;
+            
+            background: linear-gradient(to bottom, #1a1a1a, #000000);
+            border: none;
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            
+            cursor: pointer; outline: none; display: flex; justify-content: center; align-items: center;
+            overflow: hidden; transition: all 0.3s ease;
         }
-        @keyframes redAlert {
-            0% { background-color: var(--bg-dark); }
-            100% { background-color: #200008; }
+
+        /* Animated Border Effect (The Ring) */
+        .apk-luxury-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(transparent, transparent, transparent, #bf953f, #00ffff);
+            animation: borderRotate 4s linear infinite;
+            z-index: 0;
         }
+        @keyframes borderRotate { 100% { transform: rotate(1turn); } }
+
+        /* Mask to make the content sit on top of the border animation */
+        .btn-mask {
+            position: absolute;
+            top: 2px; left: 2px; right: 2px; bottom: 2px;
+            background: linear-gradient(to bottom, #1a1a1a, #050505);
+            border-radius: 13px;
+            z-index: 1;
+        }
+
+        .apk-luxury-btn::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(255, 0, 0, 0.15) 0%, transparent 70%);
+            animation: redBreath 3s infinite ease-in-out;
+            z-index: 2; pointer-events: none;
+        }
+        @keyframes redBreath { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.2); } }
+
+        .apk-luxury-btn.disabled { filter: grayscale(1); pointer-events: none; }
+        
+        .btn-content {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            pointer-events: none; z-index: 3; width: 100%; position: relative;
+        }
+        
+        .btn-text-main {
+            font-family: 'Cairo', sans-serif;
+            font-size: 20px; font-weight: 800;
+            color: #ffffff; 
+            text-transform: uppercase; letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,1);
+            transition: all 0.3s ease;
+        }
+        .highlight-yellow { color: #bf953f; }
+
+        .btn-text-sub {
+            font-size: 10px; font-weight: 600; color: #ff3333;
+            margin-top: 4px; opacity: 0.9; letter-spacing: 2px;
+            font-family: 'Share Tech Mono', monospace;
+            text-transform: uppercase;
+        }
+
+        .btn-mini-loader {
+            width: 20px; height: 20px;
+            border: 2px solid #bf953f; border-bottom-color: transparent;
+            border-radius: 50%; display: inline-block;
+            animation: rotation 1s linear infinite; margin-bottom: 5px;
+        }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Effects */
+        .ripple {
+            position: absolute; border-radius: 50%; background: rgba(255, 50, 50, 0.4);
+            transform: scale(0); animation: rippleAnim 0.6s linear; pointer-events: none; z-index: 300;
+        }
+        @keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+        
+        .star-particle {
+            position: fixed; width: 10px; height: 10px; background-color: #ffd700;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            pointer-events: none; z-index: 300; animation: starBurst 0.8s ease-out forwards;
+        }
+        @keyframes starBurst {
+            0% { transform: translate(-50%, -50%) scale(0.5) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0) rotate(180deg); opacity: 0; }
+        }
+
+        /* =========================================
+           SUBSCRIPTION PAGE
+           ======================================== */
+        #subscription-page {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #050505 0%, #1a0505 50%, #000000 100%);
+            z-index: 99999; 
+            overflow-y: auto; overflow-x: hidden;
+            display: none; flex-direction: column;
+            font-family: 'Cairo', sans-serif; color: #fff;
+            padding-bottom: 50px;
+        }
+        #subscription-page.visible { display: flex; animation: pageSlideIn 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+
+        @keyframes pageSlideIn {
+            from { opacity: 0; transform: translateY(50px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Back Button Style */
+        .back-btn {
+            position: absolute; top: 20px; left: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff; padding: 8px 15px; border-radius: 8px;
+            cursor: pointer; font-family: 'Cairo', sans-serif; font-size: 14px;
+            display: flex; align-items: center; gap: 5px;
+            backdrop-filter: blur(5px); z-index: 100000;
+            transition: 0.3s;
+        }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.2); transform: translateX(3px); }
+
+        /* Loading Overlay for Return */
+        #nav-loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 100002; display: none;
+            flex-direction: column; justify-content: center; align-items: center;
+        }
+        #nav-loader.show { display: flex; }
+        .loader-spinner {
+            width: 40px; height: 40px; border: 4px solid #333; border-top-color: #bf953f;
+            border-radius: 50%; animation: rotation 1s linear infinite;
+        }
+
+        /* Background Animated Elements */
+        .bg-anim-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1; overflow: hidden;
+        }
+        .bubble {
+            position: absolute; bottom: -50px; background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%; animation: rise 15s infinite ease-in;
+        }
+        @keyframes rise {
+            0% { bottom: -50px; transform: translateX(0); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { bottom: 100%; transform: translateX(-20px); opacity: 0; }
+        }
+        .stars-bg {
+            background-image: radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+                              radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0));
+            background-size: 200px 200px;
+            width: 100%; height: 100%; position: absolute; top: 0; left: 0;
+            animation: starMove 100s linear infinite; opacity: 0.3;
+        }
+        @keyframes starMove { from { transform: translateY(0); } to { transform: translateY(-1000px); } }
+
+        /* Sub Page Components */
+        .sub-header {
+            text-align: center; padding: 60px 20px 30px;
+            background: linear-gradient(to bottom, rgba(191, 149, 63, 0.15), transparent);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+        }
+        .vip-title {
+            font-size: 32px; color: #bf953f; font-weight: 900; margin: 0;
+            text-shadow: 0 0 20px rgba(191, 149, 63, 0.5);
+            letter-spacing: 1px; animation: floatTitle 3s ease-in-out infinite;
+        }
+        @keyframes floatTitle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        
+        .sub-content { 
+            padding: 40px 25px; max-width: 650px; margin: 0 auto; width: 100%; box-sizing: border-box; 
+            display: flex; flex-direction: column; gap: 30px; 
+        }
+
+        .glass-box {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px; padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            animation: fadeUp 0.8s ease-out;
+            position: relative; overflow: hidden;
+        }
+        
+        .feature-desc {
+            font-size: 15px; line-height: 1.8; color: #e0e0e0; margin-bottom: 20px; text-align: justify;
+            font-weight: 600;
+        }
+        .feature-list li {
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 12px; font-size: 14px; color: #bf953f; font-weight: 700;
+            transition: transform 0.2s;
+        }
+        .feature-list li:hover { transform: translateX(5px); }
+        
+        .pricing-grid { display: grid; gap: 20px; animation: fadeUp 1s ease-out; }
+        .plan-card {
+            background: linear-gradient(145deg, #181818, #0e0e0e);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px; padding: 25px;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
+        }
+        .plan-card:hover { border-color: #bf953f; transform: scale(1.02); box-shadow: 0 10px 25px rgba(0,0,0,0.7); }
+        .plan-card.vip-highlight { 
+            border: 1px solid rgba(191, 149, 63, 0.5); 
+            background: linear-gradient(145deg, #2a200a, #0a0a0a); 
+        }
+        .plan-name { font-weight: 800; font-size: 18px; color: #fff; }
+        .plan-price { font-family: 'Share Tech Mono', monospace; font-size: 22px; color: #bf953f; text-shadow: 0 0 10px rgba(191, 149, 63, 0.3); }
+
+        .vip-input {
+            width: 100%; padding: 15px; margin-bottom: 20px; box-sizing: border-box;
+            background: rgba(0,0,0,0.5); border: 1px solid #333; color: #bf953f;
+            text-align: center; font-family: 'Share Tech Mono'; font-size: 20px; letter-spacing: 4px;
+            border-radius: 10px; outline: none; transition: 0.3s;
+        }
+        .vip-input:focus { border-color: #ff0033; box-shadow: 0 0 15px rgba(255, 0, 51, 0.2); }
+
+        .vip-activate-btn {
+            background: #000;
+            color: #fff; font-weight: 800; border: 2px solid #ff0033;
+            padding: 18px 30px; border-radius: 40px; cursor: pointer;
+            font-family: 'Cairo', sans-serif; font-size: 18px;
+            box-shadow: 0 0 20px rgba(255, 0, 51, 0.2);
+            transition: 0.3s; width: 100%; position: relative; overflow: hidden;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+        .vip-activate-btn::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,0,51,0.2) 0%, transparent 60%);
+            transform: scale(0); transition: transform 0.5s;
+        }
+        .vip-activate-btn:active::after { transform: scale(1); }
+        .vip-activate-btn:active { transform: scale(0.96); }
+
+        /* =========================================
+           TWEAK: WHATSAPP BUTTON (Green/Black + Animated Border)
+           ========================================= */
+        .whatsapp-contact-btn {
+            position: relative;
+            display: flex; align-items: center; justify-content: center; gap: 15px;
+            padding: 20px; border-radius: 15px; 
+            text-decoration: none;
+            margin-top: 20px; overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 255, 65, 0.2);
+            /* Reset Default */
+            background: transparent;
+            color: white; font-weight: 900; font-size: 16px;
+        }
+
+        /* The Rotating Green Border */
+        .whatsapp-contact-btn::before {
+            content: ''; position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(transparent, #00ff41, transparent 30%);
+            animation: borderRotate 2s linear infinite;
+            z-index: 0;
+        }
+
+        /* The Inner Button Background (Black/Green Dark) */
+        .whatsapp-contact-btn::after {
+            content: ''; position: absolute;
+            inset: 2px; /* 2px border width */
+            background: linear-gradient(to bottom, #0a220a, #000000);
+            border-radius: 13px; 
+            z-index: 1;
+        }
+
+        /* Content layer to sit on top */
+        .whatsapp-contact-btn span {
+            position: relative; z-index: 2;
+        }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        #toast-container {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 100000; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 350px;
+        }
+        .toast {
+            background: rgba(10, 10, 10, 0.95); border-left: 4px solid;
+            padding: 15px; border-radius: 4px; color: #fff; font-size: 13px; font-weight: 600;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            animation: slideDownFade 0.4s;
+        }
+        .toast.error { border-color: #ff3333; }
+        .toast.success { border-color: #00ff41; background: rgba(0, 20, 0, 0.95); }
+        @keyframes slideDownFade { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .success-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 100001;
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; backdrop-filter: blur(10px);
+        }
+        .success-overlay.show { display: flex; animation: fadeIn 0.5s; }
+        .success-icon { font-size: 80px; margin-bottom: 20px; animation: bounce 1s infinite; }
+        .success-title { color: #bf953f; font-size: 30px; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
     </style>
 </head>
 <body>
 
-<!-- MATRIX LAYER -->
-<canvas id="matrixCanvas"></canvas>
-
-<div class="card-container" id="tiltContainer">
-    <div class="cyber-card" id="mainCard">
-        
-        <div class="ticker-wrap">
-            <div class="ticker">
-                <span>SYSTEM: OVERLOAD // EXCLUSIVE ACCESS GRANTED // LEVEL: GOD_MODE // DPMODS KERNEL V3 // </span>
-                <span>SYSTEM: OVERLOAD // EXCLUSIVE ACCESS GRANTED // LEVEL: GOD_MODE // DPMODS KERNEL V3 // </span>
-            </div>
-        </div>
-
-        <div id="particles"></div>
-        <div class="portrait-wrapper"></div>
-
-        <div class="hardware-screws">
-            <div class="status-dot"></div>
-            <div class="screw"></div>
-        </div>
-
-        <div class="right-specs">
-            <div class="spec-block"><span class="spec-label">CORE_ID</span><span class="spec-value cyan">DP-999X</span></div>
-            <div class="spec-block"><span class="spec-label">ACCESS</span><span class="spec-value">ROOT_LOCAL</span></div>
-            <div class="spec-block"><span class="spec-label">STATUS</span><span class="spec-value cyan" style="color: #00ff66;">LIFETIME</span></div>
-        </div>
-
-        <div class="name-panel">
-            <div class="name-label">OPERATOR</div>
-            <div class="name-value glitch-text" data-text="DPMODS VIP">DPMODS VIP</div>
-            <div class="mission-value">#BYPASS_SECURE_</div>
-        </div>
-
-        <div class="cyber-logo" onclick="openLink('https://t.me/dp_mods')">
-            <div class="crosshair">
-                <div class="ring-1"></div>
-                <svg class="tg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.21-1.12-.33-1.08-.7.02-.19.27-.39.75-.6 2.93-1.28 4.88-2.12 5.86-2.53 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/></svg>
-            </div>
-            <div class="logo-text">BYPASS</div>
-        </div>
-
-        <div class="action-console">
-            <button class="init-btn" onclick="triggerClose()">OVERRIDE SYSTEM</button>
-            <div class="meta-text">⚡ INJECT MODULE V3.0 ⚡</div>
-        </div>
-
+    <div id="vip-badge" style="display:none; position:fixed; top:3cm; right:10px; background:linear-gradient(135deg, #bf953f, #fcf6ba); color:#3e2202; padding:5px 12px; border-radius:20px; font-family:'Share Tech Mono'; font-weight:bold; font-size:12px; z-index:950; box-shadow:0 0 10px rgba(191,149,63,0.5); align-items:center; gap:5px;">
+        <span>VIP</span><span>ACTIVATED</span><span style="color:#00ff41">●</span>
     </div>
-</div>
 
-<script>
-    // --- MATRIX DIGITAL RAIN ---
-    const canvas = document.getElementById('matrixCanvas');
-    const ctx = canvas.getContext('2d');
-    let columns;
-    let drops = [];
+    <div class="vip-header">
+        <div class="hacker-top-bar">
+            <span>[ SYSTEM :: <span style="color:#bf953f">ROOT</span> ]</span>
+            <span class="blink-text">● LOCAL CONNECTION</span>
+            <span>v2.4.0</span>
+        </div>
+        <div class="digital-clock-container">
+            <div id="vip-clock" class="digital-clock">00:00:00</div>
+        </div>
+        <div class="hacker-bottom-bar">
+            <div class="stat-item"><span class="stat-icon">⚡</span><span>DEVICE TIME SYNC</span></div>
+            <div style="color: #666">|</div>
+            <div class="stat-item"><span>توقيت الجهاز المحلي</span><span style="color:#00ff41">✔</span></div>
+        </div>
+        <div class="luxury-bottom-frame"></div>
+    </div>
 
-    function initMatrix() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        columns = Math.floor(canvas.width / 20);
-        drops = Array(columns).fill(1);
-    }
+    <div class="security-ticker-bar">
+        <div class="ticker-track">
+            <div class="msg-item"><span class="msg-dot">●</span><span class="msg-title">SERVER SECURITY NOTICE:</span><span class="msg-text">نوصيك بعدم تخطي ربح 10,000,000 عملة يوميًا حتى لا تتعرض لأي مخاطر من نظام حماية التطبيق.</span></div>
+            <div class="msg-item"><span class="msg-dot">●</span><span class="msg-title">CHINA TIME SYNC:</span><span class="msg-text">هذا التطبيق مرتبط بتوقيت الساعة عبر أقوى السيرفرات الصينية العالمية لضمان التزامن الكامل.</span></div>
+            <div class="msg-item"><span class="msg-dot">●</span><span class="msg-title">GLOBAL PLATFORM NETWORK:</span><span class="msg-text">Xena Live – TopTop – SOMatch – SUGO – Hiya – Mika – Hiyoo – Yalla</span></div>
+            <div class="msg-item"><span class="msg-dot">●</span><span class="msg-title">WORLD SERVER UPDATE:</span><span class="msg-text">نطلق تحديثات السيرفر وفق التوقيت العالمي الموحد لضمان أعلى استقرار وأمان.</span></div>
+            <div class="msg-item"><span class="msg-dot">●</span><span class="msg-title">GAME SERVER PROTECTION:</span><span class="msg-text">التطبيق يدعم سيرفرًا مضبوطًا ومتزامنًا مع توقيت اللعبة العالمي بأعلى مستوى أمان.</span></div>
+            <div class="msg-item"><span class="msg-dot">●</span><span class="msg-title">SYSTEM:</span><span class="msg-text">RE-CONNECTING SECURE TUNNEL...</span></div>
+        </div>
+    </div>
 
-    function drawMatrix() {
-        ctx.fillStyle = 'rgba(3, 3, 5, 0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#00f0ff'; 
-        ctx.font = '11px monospace';
-        
-        for (let i = 0; i < drops.length; i++) {
-            const text = String.fromCharCode(Math.floor(Math.random() * 96) + 33);
-            ctx.fillText(text, i * 20, drops[i] * 20);
-            if (drops[i] * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-            drops[i]++;
-        }
-    }
-    window.addEventListener('resize', initMatrix);
-    initMatrix();
-    setInterval(drawMatrix, 40);
+    <div class="image-container">
+        <div class="image-wrapper">
+            <div class="luxury-top-frame"></div>
+            <div class="luxury-bottom-frame"></div>
+            <div class="countdown-timer" id="timer-display">
+                <span class="big-symbol">s.</span><span id="time-val">20</span>
+            </div>
+            
+            <span class="emoji one" id="item-chick">😈<span class="engraved-on-head">كتكوت</span></span>
+            <span class="emoji two" id="item-tomato">😈<span class="engraved-on-head">طماطم</span></span>
+            <span class="emoji three" id="item-corn">😈<span class="engraved-on-head">ذره</span></span>
+            <span class="emoji four" id="item-cow">😈<span class="engraved-on-head">بقرة</span></span>
+            <span class="emoji five" id="item-shrimp">😈<span class="engraved-on-head">جمبري</span></span>
+            <span class="emoji six" id="item-pepper">😈<span class="engraved-on-head">فلفل</span></span>
+            <span class="emoji seven" id="item-carrot">😈<span class="engraved-on-head">جزر</span></span>
+            <span class="emoji eight" id="item-fish">😈<span class="engraved-on-head">سمكه</span></span>
 
-    // --- 3D TILT EFFECT ---
-    const container = document.getElementById('tiltContainer');
-    document.addEventListener('mousemove', (e) => {
-        const xAxis = (window.innerWidth / 2 - e.pageX) / 15;
-        const yAxis = (window.innerHeight / 2 - e.pageY) / 15;
-        container.style.transform = `rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
-    });
-    
-    // For Mobile Touch Support
-    document.addEventListener('touchmove', (e) => {
-        const touch = e.touches[0];
-        const xAxis = (window.innerWidth / 2 - touch.pageX) / 12;
-        const yAxis = (window.innerHeight / 2 - touch.pageY) / 12;
-        container.style.transform = `rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
-    });
+            <img src="https://iili.io/f6v88WF.jpg" alt="صورة العرض">
+        </div>
+    </div>
 
-    // --- CYBER PARTICLES ---
-    function spawnParticles() {
-        const container = document.getElementById('particles');
-        for (let i = 0; i < 30; i++) {
-            let p = document.createElement('div');
-            p.className = 'particle';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.bottom = '15%';
-            p.style.animationDuration = (Math.random() * 2 + 2) + 's';
-            p.style.animationDelay = Math.random() * 2 + 's';
-            if(Math.random() > 0.5) p.style.background = 'var(--neon-purple)';
-            container.appendChild(p);
-        }
-    }
-    spawnParticles();
+    <button class="apk-luxury-btn" id="actionBtn">
+        <div class="btn-mask"></div>
+        <div class="btn-content" id="btnContent">
+            <span class="btn-text-main" id="btnTextMain">بدء استكشاف نتائج</span>
+            <span class="btn-text-sub" id="btnTextSub">AI PREDICTION SYSTEM</span>
+        </div>
+    </button>
 
-    function openLink(url) { window.open(url, '_blank'); }
+    <div id="nav-loader">
+        <div class="loader-spinner"></div>
+        <div style="color:#fff; margin-top:10px; font-family:'Share Tech Mono';">RETURNING...</div>
+    </div>
 
-    // --- CRITICAL OVERRIDE TERMINATION ---
-    function triggerClose() {
-        const card = document.getElementById('mainCard');
-        const btn = document.querySelector('.init-btn');
-        document.body.classList.add('system-critical');
-        
-        btn.style.borderColor = 'var(--neon-red)';
-        btn.style.backgroundColor = 'var(--neon-red)';
-        btn.style.color = '#fff';
-        btn.innerText = 'CRITICAL STOP...';
+    <div id="subscription-page">
+        <button id="back-to-home" class="back-btn">
+            <span>➜</span> <span>الرجوع</span>
+        </button>
 
-        card.style.transition = 'all 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045)';
-        card.style.transform = 'scale(0) rotateZ(15deg)';
-        card.style.opacity = '0';
-        
-        setTimeout(() => {
-            window.location.href = "action://close";
-        }, 400);
-    }
-</script>
+        <div class="bg-anim-layer">
+            <div class="stars-bg"></div>
+            <div class="bubble" style="left: 10%; animation-duration: 8s;"></div>
+            <div class="bubble" style="left: 30%; animation-duration: 12s; animation-delay: 2s;"></div>
+            <div class="bubble" style="left: 70%; animation-duration: 10s; animation-delay: 1s;"></div>
+            <div class="bubble" style="left: 90%; animation-duration: 15s; animation-delay: 0.5s;"></div>
+        </div>
 
+        <div class="sub-header">
+            <h1 class="vip-title">PREMIUM ACCESS</h1>
+            <div class="vip-subtitle" style="color:#888; margin-top:10px; font-weight:600;">بوابة العبور إلى الاحترافية</div>
+        </div>
+
+        <div class="sub-content">
+            <div class="glass-box">
+                <h3 style="color:#bf953f; margin-top:0; border-bottom:1px solid #333; padding-bottom:10px;">الاشتراك في توقع 5 اختيارات</h3>
+                <p class="feature-desc">
+                    مرحبًا بك في المستوى التالي من التحليل الرقمي. يمنحك هذا الاشتراك إمكانية استكشاف 5 اختيارات دقيقة للعب عليها في كل جولة، مع خوارزميات متقدمة تمنحك الأفضلية الدائمة في الوصول للتوقعات قبل الجميع.
+                    الاشتراك مصمم خصيصًا للنخبة الباحثين عن تجربة أسرع، أدق، وأكثر احترافية.
+                </p>
+                <ul class="feature-list">
+                    <li><span>✔</span> أولوية قصوى في معالجة التوقعات</li>
+                    <li><span>✔</span> دعم فني VIP مخصص على مدار الساعة</li>
+                    <li><span>✔</span> ضمان 15 جولة صحيحة متتالية</li>
+                    <li><span>✔</span> نظام حماية مزدوج (Double-Blind)</li>
+                    <li><span>✔</span> تجربة خالية من الانتظار والإعلانات</li>
+                </ul>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="plan-card">
+                    <span class="plan-name">الاشتراك الشهري</span>
+                    <span class="plan-price">$100</span>
+                </div>
+                <div class="plan-card">
+                    <span class="plan-name">اشتراك 5 شهور</span>
+                    <span class="plan-price">$500</span>
+                </div>
+                <div class="plan-card vip-highlight">
+                    <div style="position:absolute; top:0; right:0; background:#bf953f; color:#000; font-size:10px; padding:3px 8px; font-weight:bold;">BEST VALUE</div>
+                    <span class="plan-name" style="color:#bf953f">عرض VIP السنوي</span>
+                    <span class="plan-price">$1000</span>
+                </div>
+            </div>
+
+            <div class="glass-box" id="activation-panel" style="text-align:center;">
+                <h3 style="color:#fff; margin-bottom:20px;">تفعيل الاشتراك</h3>
+                <input type="text" id="vip-code-input" class="vip-input" placeholder="أدخل كود التفعيل">
+                <button class="vip-activate-btn" id="activate-btn">
+                    <span>تفعيل الآن</span>
+                    <span>🚀</span>
+                </button>
+            </div>
+
+            <a href="https://wa.me/201202230265?text=%D9%85%D8%B1%D8%AD%D8%A8%D9%8B%D8%A7%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%D9%83%20%D9%81%D9%8A%20%D8%AE%D8%B7%D8%A9%20%D8%AA%D9%88%D9%82%D8%B9%20%D8%A7%D9%84%D9%805%20%D8%A7%D8%AE%D8%AA%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA%20%D9%81%D9%8A%20%D8%A8%D8%B1%D9%86%D8%A7%D9%85%D8%AC%20%D8%A7%D8%B3%D8%AA%D9%83%D8%B4%D8%A7%D9%81%20%D9%86%D8%AA%D8%A7%D8%A6%D8%AC%20%D9%84%D8%B9%D8%A8%D8%A9%20%D8%A7%D9%84%D9%85%D8%B2%D8%B1%D8%B9%D8%A9" class="whatsapp-contact-btn" target="_blank">
+                <span style="font-size:24px">📱</span>
+                <span>تواصل لطلب كود التفعيل (WhatsApp)</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="success-overlay" id="success-overlay">
+        <div class="success-icon">👑</div>
+        <div class="success-title">مبروك!</div>
+        <div style="color:#fff; font-size:18px; font-weight:600;">تم تفعيل اشتراك VIP بنجاح</div>
+        <div style="color:#888; font-size:14px; margin-top:10px;">استمتع بالتجربة الكاملة</div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            
+            // --- Basic Clock ---
+            const clockEl = document.getElementById('vip-clock');
+            function updateClock() {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' });
+                clockEl.innerText = timeStr;
+            }
+            setInterval(updateClock, 1000); updateClock();
+
+            // --- Variables ---
+            const btn = document.getElementById('actionBtn');
+            const btnContent = document.getElementById('btnContent');
+            const btnTextMain = document.getElementById('btnTextMain');
+            const btnTextSub = document.getElementById('btnTextSub');
+            const subPage = document.getElementById('subscription-page');
+            
+            const timerContainer = document.getElementById('timer-display');
+            const timeVal = document.getElementById('time-val');
+            
+            const emojiIds = ['item-chick', 'item-tomato', 'item-corn', 'item-cow', 'item-shrimp', 'item-pepper', 'item-carrot', 'item-fish'];
+            const CHICK_ID = 'item-chick';
+            const SPECIAL_MINUTES = [58, 0, 48, 37]; 
+            const VIP_KEY = 'hacker_vip_status';
+            const VIP_EXPIRY_KEY = 'hacker_vip_expiry';
+            const TRUE_CODE = 'sbsjbz532';
+
+            let isGameRunning = false;
+            let animationFrameId = null;
+            let spinInterval = null;
+            let roundWinners = [];
+            let revealHasStarted = false;
+            let seedValue = 0;
+
+            // --- Helper Functions ---
+            const delay = ms => new Promise(res => setTimeout(res, ms));
+            function setSeed(val) { seedValue = val; }
+            function seededRandom() { seedValue = (seedValue * 9301 + 49297) % 233280; return seedValue / 233280; }
+            function shuffleArraySeeded(array) {
+                let currentIndex = array.length, temporaryValue, randomIndex;
+                while (0 !== currentIndex) {
+                    randomIndex = Math.floor(seededRandom() * currentIndex);
+                    currentIndex -= 1;
+                    temporaryValue = array[currentIndex];
+                    array[currentIndex] = array[randomIndex];
+                    array[randomIndex] = temporaryValue;
+                }
+                return array;
+            }
+
+            // --- Intro Animation ---
+            async function runIntroAnimation() {
+                timerContainer.classList.remove('show-timer');
+                btn.classList.add('disabled');
+                const totalDuration = 2000; 
+                const timePerItem = totalDuration / emojiIds.length;
+                for (let i = 0; i < emojiIds.length; i++) {
+                    const el = document.getElementById(emojiIds[i]);
+                    if (el) {
+                        el.classList.add('visible'); el.classList.add('active-selection'); 
+                        await delay(timePerItem);
+                        el.classList.remove('visible'); el.classList.remove('active-selection');
+                    }
+                }
+                btn.classList.remove('disabled');
+            }
+            await runIntroAnimation();
+
+            // --- VIP Check Logic ---
+            function isVIP() {
+                const status = localStorage.getItem(VIP_KEY);
+                const expiry = localStorage.getItem(VIP_EXPIRY_KEY);
+                if (status === 'active' && expiry) {
+                    if (Date.now() < parseInt(expiry)) return true;
+                    else { localStorage.removeItem(VIP_KEY); localStorage.removeItem(VIP_EXPIRY_KEY); return false; }
+                }
+                return false;
+            }
+
+            // --- UI Updates based on State ---
+            function updateButtonState() {
+                const vip = isVIP();
+                if (vip) {
+                    document.getElementById('vip-badge').style.display = 'flex';
+                    if (!isGameRunning) {
+                        // VIP Idle
+                        btnTextMain.innerText = "بدء استكشاف نتائج";
+                        btnTextMain.classList.add('highlight-yellow');
+                        btnTextSub.innerText = "VIP SYSTEM READY";
+                    }
+                } else {
+                    // Non-VIP
+                    document.getElementById('vip-badge').style.display = 'none';
+                    btnTextMain.innerText = "بدء استكشاف نتائج";
+                    btnTextMain.classList.remove('highlight-yellow');
+                    btnTextSub.innerText = "TAP TO EXPLORE";
+                }
+            }
+            updateButtonState();
+
+            // --- Main Interaction Logic ---
+            btn.addEventListener('click', async (e) => {
+                if (isGameRunning) return;
+
+                const vip = isVIP();
+
+                playButtonEffects(e);
+
+                if (!vip) {
+                    // --- NON-VIP FLOW ---
+                    // 1. Show Loading on Button
+                    const oldContent = btnContent.innerHTML;
+                    btn.classList.add('disabled');
+                    btnContent.innerHTML = `<div class="btn-mini-loader"></div><div class="btn-text-sub" style="color:#fff;">CHECKING SERVER...</div>`;
+                    
+                    // 2. Wait 3 Seconds
+                    await delay(3000);
+
+                    // 3. Reset Button (in background)
+                    btnContent.innerHTML = oldContent;
+                    btn.classList.remove('disabled');
+
+                    // 4. Navigate to Subscription Page
+                    subPage.classList.add('visible');
+
+                } else {
+                    // --- VIP FLOW (Immediate Start) ---
+                    // 1. Change UI to Active
+                    btnTextMain.innerText = "جاري استكشاف النتائج";
+                    btnTextSub.innerText = "PROCESSING DATA...";
+                    
+                    // 2. Start Game Logic
+                    const clickTime = new Date();
+                    const currentMinute = clickTime.getMinutes();
+                    const seed = Math.floor(clickTime.getTime() / 1000);
+                    setSeed(seed);
+                    roundWinners = determineWinners(currentMinute);
+                    startRound();
+                }
+            });
+
+            // --- TWEAK: Back to Home Logic ---
+            const backBtn = document.getElementById('back-to-home');
+            const navLoader = document.getElementById('nav-loader');
+            
+            backBtn.addEventListener('click', async () => {
+                // Show loader
+                navLoader.classList.add('show');
+                // Wait short delay
+                await delay(800);
+                // Hide Sub Page
+                subPage.classList.remove('visible');
+                // Hide Loader
+                navLoader.classList.remove('show');
+            });
+
+            // --- Game Logic ---
+            function determineWinners(minute) {
+                const isChickMinute = SPECIAL_MINUTES.includes(minute);
+                let finalSelection = [];
+                if (isChickMinute) {
+                    finalSelection.push(CHICK_ID);
+                    let remaining = emojiIds.filter(id => id !== CHICK_ID);
+                    shuffleArraySeeded(remaining); 
+                    finalSelection = finalSelection.concat(remaining.slice(0, 4));
+                } else {
+                    let pool = emojiIds.filter(id => id !== CHICK_ID);
+                    shuffleArraySeeded(pool);
+                    finalSelection = pool.slice(0, 5);
+                }
+                return shuffleArraySeeded(finalSelection);
+            }
+
+            function startRound() {
+                isGameRunning = true;
+                btn.classList.add('disabled');
+                timerContainer.classList.add('show-timer');
+                revealHasStarted = false;
+
+                // Hide current
+                emojiIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if(el) { el.classList.remove('visible'); el.classList.remove('active-selection'); el.style.opacity = ''; }
+                });
+
+                const durationSeconds = 20;
+                const endTime = Date.now() + (durationSeconds * 1000);
+
+                startSpinEffect();
+                function updateLoop() {
+                    const now = Date.now();
+                    const remainingSeconds = Math.ceil((endTime - now) / 1000);
+
+                    if (remainingSeconds >= 0) timeVal.innerText = remainingSeconds;
+
+                    if (remainingSeconds <= 15 && !revealHasStarted) {
+                        stopSpinEffect();
+                        revealWinnersSequence(roundWinners);
+                        revealHasStarted = true;
+                    }
+
+                    if (remainingSeconds <= 0) {
+                        endRound();
+                        return;
+                    }
+                    animationFrameId = requestAnimationFrame(updateLoop);
+                }
+                animationFrameId = requestAnimationFrame(updateLoop);
+            }
+
+            function startSpinEffect() {
+                if (spinInterval) clearInterval(spinInterval);
+                spinInterval = setInterval(() => {
+                    const randomIdx = Math.floor(Math.random() * emojiIds.length);
+                    const el = document.getElementById(emojiIds[randomIdx]);
+                    el.style.opacity = '0.7';
+                    setTimeout(() => { if (!el.classList.contains('visible')) el.style.opacity = '0'; }, 150);
+                }, 150);
+            }
+
+            function stopSpinEffect() {
+                if (spinInterval) clearInterval(spinInterval);
+                emojiIds.forEach(id => document.getElementById(id).style.opacity = '');
+            }
+
+            async function revealWinnersSequence(winners) {
+                const stepDelay = 400;
+                for (let i = 0; i < winners.length; i++) {
+                    if (!isGameRunning) break;
+                    const el = document.getElementById(winners[i]);
+                    if (el) { el.classList.add('visible'); el.classList.add('active-selection'); }
+                    await delay(stepDelay);
+                }
+            }
+
+            function endRound() {
+                cancelAnimationFrame(animationFrameId);
+                stopSpinEffect();
+                if (roundWinners.length > 0) {
+                     emojiIds.forEach(id => {
+                        const el = document.getElementById(id);
+                        if (roundWinners.includes(id)) { el.classList.add('visible'); el.classList.add('active-selection'); }
+                        else { el.classList.remove('visible'); el.classList.remove('active-selection'); }
+                     });
+                     timeVal.innerText = "0";
+                }
+                isGameRunning = false;
+                timerContainer.classList.remove('show-timer');
+                
+                setTimeout(() => {
+                    emojiIds.forEach(id => {
+                        const el = document.getElementById(id);
+                        if(el) { el.classList.remove('visible'); el.classList.remove('active-selection'); }
+                    });
+                    
+                    // Re-enable button with New Text (VIP ONLY behavior)
+                    btn.classList.remove('disabled');
+                    btnTextMain.innerText = "بدء جولة استكشاف نتائج جديدة";
+                    
+                }, 1000);
+            }
+
+            // --- Effects ---
+            function playButtonEffects(e) {
+                const circle = document.createElement('span');
+                const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+                const radius = diameter / 2;
+                const rect = btn.getBoundingClientRect();
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${e.clientX - rect.left - radius}px`;
+                circle.style.top = `${e.clientY - rect.top - radius}px`;
+                circle.classList.add('ripple');
+                const oldRipple = btn.querySelector('.ripple');
+                if (oldRipple) oldRipple.remove();
+                btn.appendChild(circle);
+                createStars(e.clientX, e.clientY);
+            }
+
+            function createStars(x, y) {
+                const particleCount = 12;
+                for (let i = 0; i < particleCount; i++) {
+                    const star = document.createElement('div');
+                    star.classList.add('star-particle');
+                    document.body.appendChild(star);
+                    star.style.left = x + 'px';
+                    star.style.top = y + 'px';
+                    const angle = Math.random() * Math.PI * 2;
+                    const velocity = 80 + Math.random() * 100;
+                    const tx = Math.cos(angle) * velocity + 'px';
+                    const ty = Math.sin(angle) * velocity + 'px';
+                    star.style.setProperty('--tx', tx);
+                    star.style.setProperty('--ty', ty);
+                    setTimeout(() => star.remove(), 800);
+                }
+            }
+
+            // --- Activation Logic ---
+            const activateBtn = document.getElementById('activate-btn');
+            const codeInput = document.getElementById('vip-code-input');
+            const successOverlay = document.getElementById('success-overlay');
+
+            activateBtn.addEventListener('click', async () => {
+                const code = codeInput.value.trim();
+                if (!code) { showToast('يرجى إدخال كود التفعيل', 'error'); return; }
+
+                if (code === TRUE_CODE) {
+                    const oneMonth = 30 * 24 * 60 * 60 * 1000;
+                    localStorage.setItem(VIP_KEY, 'active');
+                    localStorage.setItem(VIP_EXPIRY_KEY, (Date.now() + oneMonth).toString());
+
+                    // Close Sub Page & Show Success
+                    subPage.classList.remove('visible'); // Hide Sub immediately
+                    successOverlay.classList.add('show');
+                    
+                    await delay(3000);
+                    successOverlay.classList.remove('show');
+                    showToast('تم تفعيل مميزات VIP بنجاح', 'success');
+                    updateButtonState();
+                } else {
+                    showToast('كود التفعيل غير صحيح', 'error');
+                }
+            });
+
+            function showToast(message, type = 'info') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `<span>${message}</span>`;
+                container.appendChild(toast);
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }
+        });
+    </script>
 </body>
 </html>
