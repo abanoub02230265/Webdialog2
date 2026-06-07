@@ -6,39 +6,21 @@
 <title>Mini YouTube Action</title>
 
 <style>
-    html, body {
-        margin: 0; padding: 0; width: 100%; height: 100%;
-        background: transparent; overflow: hidden;
-    }
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: transparent; overflow: hidden; }
+    .screen { position: fixed; width: 100%; height: 100%; background: transparent; }
 
-    .screen {
-        position: fixed; width: 100%; height: 100%;
-        background: transparent;
-    }
-
-    /* أيقونة اليوتيوب */
     .yt-icon {
-        position: absolute; top: 50%; left: 20px;
-        transform: translateY(-50%);
+        position: absolute; top: 50%; left: 20px; transform: translateY(-50%);
         width: 60px; height: 40px;
         background-image: url("https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg");
         background-size: contain; background-repeat: no-repeat; background-position: center;
         cursor: pointer; z-index: 10;
     }
 
-    /* القائمة التي ستفتح (Menu) */
     .yt-menu {
-        position: absolute;
-        top: 3cm;          /* مسافة 3 سم من الأعلى */
-        bottom: 3cm;       /* مسافة 3 سم من الأسفل */
-        left: 20px;
-        width: 4cm;        /* عرض 4 سم */
-        background: #fff;
-        border-radius: 10px;
-        display: none;     /* مخفية افتراضياً */
-        z-index: 20;
-        box-shadow: 0 0 15px rgba(0,0,0,0.3);
-        padding: 10px;
+        position: absolute; top: 3cm; bottom: 3cm; left: 20px; width: 4cm;
+        background: #fff; border-radius: 10px; display: none; z-index: 20;
+        box-shadow: 0 0 15px rgba(0,0,0,0.3); padding: 10px;
     }
 </style>
 </head>
@@ -47,10 +29,9 @@
 
 <div class="screen" id="screen">
     <div class="yt-icon" id="ytIcon"></div>
-    
     <div class="yt-menu" id="ytMenu">
         <h3>YouTube</h3>
-        <p>محتوى اليوتيوب هنا...</p>
+        <p>محتوى مزوجي هنا...</p>
     </div>
 </div>
 
@@ -59,21 +40,49 @@
     const menu = document.getElementById("ytMenu");
     const icon = document.getElementById("ytIcon");
 
+    let clickCount = 0;
+    let clickTimer = null;
+
     // عند الضغط على أيقونة اليوتيوب
     icon.addEventListener("click", function(e){
-        e.stopPropagation(); // منع إغلاق الشاشة
-        menu.style.display = "block"; // إظهار القائمة
+        e.stopPropagation();
+        menu.style.display = "block";
     });
 
-    // عند الضغط في أي مكان فارغ (بما في ذلك داخل القائمة إذا أردت إغلاقها)
+    // منطق الضغط المتعدد في الشاشة الفاضية
     screen.addEventListener("click", function(e){
-        // إذا كان المستخدم ضغط على القائمة نفسها، لا تغلق (اختياري)
+        // إذا ضغط داخل القائمة، لا تفعل شيئاً
         if(e.target === menu || menu.contains(e.target)) return;
         
-        triggerClose();
+        // إغلاق القائمة إذا كانت مفتوحة
+        menu.style.display = "none";
+
+        clickCount++;
+
+        if (clickCount === 1) {
+            // مؤقت انتظار لمعرفة هل سيكمل المستخدم الضغطات أم لا
+            clickTimer = setTimeout(() => {
+                if (clickCount === 1) {
+                    // ضغطة واحدة = إغلاق
+                    triggerClose();
+                } else if (clickCount >= 3) {
+                    // 3 ضغطات أو أكثر = فتح قائمة الديلوح (مثال: تغيير اللون أو إظهار عنصر)
+                    openDaloohMenu();
+                }
+                clickCount = 0;
+            }, 500); // 500ms كافية للضغطات المتتالية
+        } else if (clickCount >= 3) {
+            clearTimeout(clickTimer);
+            openDaloohMenu();
+            clickCount = 0;
+        }
     });
 
-    // دالة الإغلاق
+    function openDaloohMenu() {
+        alert("تم فتح قائمة الديلوح!");
+        // هنا يمكنك إضافة كود إظهار القائمة الخاصة بك
+    }
+
     function triggerClose() {
         screen.style.transition = 'all 0.5s ease';
         screen.style.opacity = '0';
@@ -86,4 +95,3 @@
 
 </body>
 </html>
-
