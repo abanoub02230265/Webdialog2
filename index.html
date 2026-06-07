@@ -1,97 +1,62 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mini YouTube Action</title>
+<title>DPMods Control Panel</title>
 
 <style>
-    html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: transparent; overflow: hidden; }
-    .screen { position: fixed; width: 100%; height: 100%; background: transparent; }
+body {
+    margin:0;
+    font-family: Arial;
+    background:#0b0e14;
+    color:#00e5ff;
+    text-align:center;
+}
 
-    .yt-icon {
-        position: absolute; top: 50%; left: 20px; transform: translateY(-50%);
-        width: 60px; height: 40px;
-        background-image: url("https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg");
-        background-size: contain; background-repeat: no-repeat; background-position: center;
-        cursor: pointer; z-index: 10;
-    }
+h1 {
+    margin-top:30px;
+    text-shadow:0 0 10px #00e5ff;
+}
 
-    .yt-menu {
-        position: absolute; top: 3cm; bottom: 3cm; left: 20px; width: 4cm;
-        background: #fff; border-radius: 10px; display: none; z-index: 20;
-        box-shadow: 0 0 15px rgba(0,0,0,0.3); padding: 10px;
-    }
+.btn {
+    display:block;
+    width:80%;
+    margin:15px auto;
+    padding:15px;
+    background:#111827;
+    border:2px solid #00e5ff;
+    color:#00e5ff;
+    font-size:18px;
+    border-radius:10px;
+    text-decoration:none;
+}
+
+.btn:active {
+    transform:scale(0.95);
+    background:#00e5ff;
+    color:#000;
+}
 </style>
+
+<script>
+
+function sendAction(action){
+    window.location.href = action;
+}
+
+</script>
+
 </head>
 
 <body>
 
-<div class="screen" id="screen">
-    <div class="yt-icon" id="ytIcon"></div>
-    <div class="yt-menu" id="ytMenu">
-        <h3>YouTube</h3>
-        <p>محتوى مزوجي هنا...</p>
-    </div>
-</div>
+<h1>🔥 DPMods Control Panel</h1>
 
-<script>
-    const screen = document.getElementById("screen");
-    const menu = document.getElementById("ytMenu");
-    const icon = document.getElementById("ytIcon");
+<a class="btn" href="action://close">❌ Close Dialog</a>
 
-    let clickCount = 0;
-    let clickTimer = null;
+<a class="btn" href="https://google.com">🌐 Open Google (Test External)</a>
 
-    // عند الضغط على أيقونة اليوتيوب
-    icon.addEventListener("click", function(e){
-        e.stopPropagation();
-        menu.style.display = "block";
-    });
-
-    // منطق الضغط المتعدد في الشاشة الفاضية
-    screen.addEventListener("click", function(e){
-        // إذا ضغط داخل القائمة، لا تفعل شيئاً
-        if(e.target === menu || menu.contains(e.target)) return;
-        
-        // إغلاق القائمة إذا كانت مفتوحة
-        menu.style.display = "none";
-
-        clickCount++;
-
-        if (clickCount === 1) {
-            // مؤقت انتظار لمعرفة هل سيكمل المستخدم الضغطات أم لا
-            clickTimer = setTimeout(() => {
-                if (clickCount === 1) {
-                    // ضغطة واحدة = إغلاق
-                    triggerClose();
-                } else if (clickCount >= 3) {
-                    // 3 ضغطات أو أكثر = فتح قائمة الديلوح (مثال: تغيير اللون أو إظهار عنصر)
-                    openDaloohMenu();
-                }
-                clickCount = 0;
-            }, 500); // 500ms كافية للضغطات المتتالية
-        } else if (clickCount >= 3) {
-            clearTimeout(clickTimer);
-            openDaloohMenu();
-            clickCount = 0;
-        }
-    });
-
-    function openDaloohMenu() {
-        alert("تم فتح قائمة الديلوح!");
-        // هنا يمكنك إضافة كود إظهار القائمة الخاصة بك
-    }
-
-    function triggerClose() {
-        screen.style.transition = 'all 0.5s ease';
-        screen.style.opacity = '0';
-        screen.style.transform = 'scale(0.95)';
-        setTimeout(() => {  
-            window.location.href = "action://close";  
-        }, 450);  
-    }
-</script>
+<a class="btn" onclick="sendAction('action://close')">⚡ JS Close Action</a>
 
 </body>
 </html>
