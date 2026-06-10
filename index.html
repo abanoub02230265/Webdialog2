@@ -1,18 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DPMods بطاقة الهوية السيبرانية</title>
+    <title>ألمہــزاᵇᵃᵇᵃجہنـہجـہي بطاقة الهوية</title>
     <style>
         :root {
             --bg-metal: #050507;
             --neon-purple: #d500ff;
             --neon-cyan: #00e5ff;
             --neon-pink: #ff00aa;
-            --neon-green: #00ff88;
-            --neon-orange: #ff6600;
             --text-main: #ffffff;
             --text-dim: #8b8b99;
             --font-sys: 'Courier New', 'Tahoma', Courier, monospace;
@@ -23,13 +20,10 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- BLURRED DIALOG BACKDROP --- */
         body {
             margin: 0;
             padding: 0;
-            background: radial-gradient(ellipse at center, #1a0033 0%, #000000 100%);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: #000;
             color: var(--text-main);
             font-family: var(--font-sys);
             width: 100vw;
@@ -38,77 +32,60 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            animation: bgShift 10s ease-in-out infinite;
         }
 
-        @keyframes bgShift {
-            0%, 100% { background: radial-gradient(ellipse at center, #1a0033 0%, #000000 100%); }
-            33% { background: radial-gradient(ellipse at center, #001a33 0%, #000000 100%); }
-            66% { background: radial-gradient(ellipse at center, #33001a 0%, #000000 100%); }
-        }
-
-        /* --- THE FLOATING CYBER CARD --- */
+        /* --- البطاقة الرئيسية - تغطي الشاشة كاملة --- */
         .cyber-card {
-            width: 92%;
-            max-width: 400px;
-            aspect-ratio: 5 / 8;
-            max-height: 88vh;
+            width: 100%;
+            height: 100vh;
             background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 50%, #0a0a0f 100%);
-            background-size: 200% 200%;
             background-image: 
                 linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-                linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 50%, #0a0a0f 100%);
-            background-size: 20px 20px, 20px 20px, 200% 200%;
+                linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+            background-size: 20px 20px, 20px 20px;
             position: relative;
-            clip-path: polygon(0 0, 90% 0, 100% 8%, 100% 100%, 8% 100%, 0 92%);
             box-shadow: 
                 inset 0 0 0 1px rgba(255,255,255,0.15), 
-                0 30px 60px rgba(0,0,0,0.95),
-                0 0 100px rgba(213, 0, 255, 0.3),
-                0 0 150px rgba(0, 229, 255, 0.2);
+                0 0 60px rgba(213, 0, 255, 0.4);
             opacity: 0;
             transform: scale(0.9) translateY(30px);
-            animation: 
-                bootUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards,
-                cardFloat 6s ease-in-out infinite 1s,
-                gradientShift 8s ease infinite;
-            transition: all 0.4s ease;
+            animation: bootUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            will-change: transform, opacity;
         }
 
-        @keyframes gradientShift {
-            0%, 100% { background-position: 20px 20px, 20px 20px, 0% 50%; }
-            50% { background-position: 20px 20px, 20px 20px, 100% 50%; }
+        /* --- الفيديو في الخلفية --- */
+        .bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.3;
         }
 
-        @keyframes cardFloat {
-            0%, 100% { transform: scale(1) translateY(0) rotateX(0deg); }
-            50% { transform: scale(1.02) translateY(-10px) rotateX(2deg); }
-        }
-
-        /* --- PARTICLE SYSTEM --- */
+        /* --- نظام الجسيمات --- */
         #particles {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 2; overflow: hidden;
-            clip-path: polygon(0 0, 90% 0, 100% 8%, 100% 100%, 8% 100%, 0 92%);
         }
         .particle {
-            position: absolute; width: 4px; height: 4px;
+            position: absolute; width: 3px; height: 3px;
             background: var(--neon-purple); border-radius: 50%; opacity: 0;
-            box-shadow: 0 0 15px 3px var(--neon-purple), 0 0 30px 5px var(--neon-purple);
+            box-shadow: 0 0 8px 2px var(--neon-purple);
             animation: floatUp infinite linear;
+            will-change: transform, opacity;
         }
 
-        /* --- FAST-LOAD MARQUEE TICKER --- */
+        /* --- شريط التمرير --- */
         .ticker-wrap {
-            position: absolute; top: 0; right: 0; left: 10%; height: 20px;
+            position: absolute; top: 0; right: 0; left: 0; height: 18px;
             background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink), var(--neon-cyan));
             background-size: 300% 100%;
-            animation: rainbowShift 3s linear infinite;
+            animation: rainbowShift 4s linear infinite;
             color: #000; overflow: hidden;
             display: flex; align-items: center; z-index: 15;
-            clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.8);
         }
 
         @keyframes rainbowShift {
@@ -119,125 +96,101 @@
         .ticker {
             display: flex;
             width: max-content;
-            animation: marquee 12s linear infinite;
+            animation: marquee 15s linear infinite;
         }
         .ticker span {
             white-space: nowrap; font-size: 10px; font-weight: 900; letter-spacing: 2px;
             padding-left: 15px; padding-right: 15px;
             font-family: 'Tahoma', sans-serif;
-            text-shadow: 0 0 10px rgba(255,255,255,0.8);
         }
 
-        /* --- ANIMATIONS --- */
+        /* --- الأنيميشن --- */
         @keyframes bootUp { 100% { opacity: 1; transform: scale(1) translateY(0); } }
         @keyframes seqFade { 0% { opacity: 0; transform: translateX(-15px); } 100% { opacity: 1; transform: translateX(0); } }
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes spinRev { 100% { transform: rotate(-360deg); } }
         @keyframes blink { 
-            0%, 100% { opacity: 1; box-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-cyan); background: var(--neon-cyan); } 
-            50% { opacity: 0.3; box-shadow: 0 0 5px var(--neon-cyan); background: var(--neon-purple); } 
+            0%, 100% { opacity: 1; } 
+            50% { opacity: 0.3; } 
         }
-        @keyframes scanline { 0% { top: -5%; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 105%; opacity: 0; } }
-        @keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 0; } 10% { opacity: 1; } 80% { opacity: 0.7; } 100% { transform: translateY(-200px) scale(0.2); opacity: 0; } }
-        @keyframes floatIcon { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-5px) rotate(5deg); } }
+        @keyframes scanline { 
+            0% { top: -5%; opacity: 0; } 
+            10% { opacity: 0.7; } 
+            90% { opacity: 0.7; } 
+            100% { top: 105%; opacity: 0; } 
+        }
+        @keyframes floatUp { 
+            0% { transform: translateY(0); opacity: 0; } 
+            10% { opacity: 0.8; } 
+            90% { opacity: 0.4; } 
+            100% { transform: translateY(-200px); opacity: 0; } 
+        }
+        @keyframes floatIcon { 
+            0%, 100% { transform: translateY(0); } 
+            50% { transform: translateY(-3px); } 
+        }
         @keyframes neonPulse { 
-            0%, 100% { 
-                box-shadow: 0 0 20px rgba(213, 0, 255, 0.6), inset 0 0 15px rgba(213, 0, 255, 0.3), 0 0 40px rgba(0, 229, 255, 0.4); 
-                border-color: var(--neon-purple);
-            } 
-            50% { 
-                box-shadow: 0 0 40px rgba(213, 0, 255, 1), inset 0 0 30px rgba(213, 0, 255, 0.6), 0 0 60px rgba(0, 229, 255, 0.8); 
-                border-color: var(--neon-cyan);
-            } 
-        }
-        @keyframes glitch {
-            0%, 100% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-        }
-        @keyframes shimmer {
-            0% { background-position: -200% center; }
-            100% { background-position: 200% center; }
-        }
-        @keyframes rainbowBorder {
-            0% { border-color: var(--neon-purple); box-shadow: 0 0 20px var(--neon-purple); }
-            25% { border-color: var(--neon-cyan); box-shadow: 0 0 20px var(--neon-cyan); }
-            50% { border-color: var(--neon-pink); box-shadow: 0 0 20px var(--neon-pink); }
-            75% { border-color: var(--neon-green); box-shadow: 0 0 20px var(--neon-green); }
-            100% { border-color: var(--neon-purple); box-shadow: 0 0 20px var(--neon-purple); }
-        }
-        @keyframes textGlow {
-            0%, 100% { text-shadow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-purple), 0 0 30px var(--neon-purple); }
-            50% { text-shadow: 0 0 20px var(--neon-cyan), 0 0 30px var(--neon-cyan), 0 0 40px var(--neon-cyan); }
-        }
-        @keyframes rotateHue {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
+            0%, 100% { box-shadow: 0 0 15px rgba(213, 0, 255, 0.5), inset 0 0 10px rgba(213, 0, 255, 0.2); } 
+            50% { box-shadow: 0 0 25px rgba(213, 0, 255, 0.8), inset 0 0 15px rgba(213, 0, 255, 0.4); } 
         }
 
-        /* --- THE CENTRAL PORTRAIT --- */
+        /* --- الفيديو المركزي (بدلاً من الصورة) --- */
         .portrait-wrapper {
             position: absolute;
             top: 45px; left: 40px; right: 40px; 
             bottom: 155px; 
-            background: url('https://raw.githubusercontent.com/DPModsYT/webbydpmods/refs/heads/main/IMG_20260514_135013.jpg') center/cover no-repeat;
-            border: 3px solid var(--neon-purple); border-radius: 8px;
-            animation: 
-                bootUp 0.5s 0.3s forwards, 
-                neonPulse 3s 0.8s infinite ease-in-out,
-                rainbowBorder 6s infinite linear;
+            border: 2px solid var(--neon-purple); border-radius: 6px;
+            animation: bootUp 0.5s 0.3s forwards, neonPulse 4s 0.8s infinite ease-in-out;
             z-index: 1; overflow: hidden; opacity: 0;
+            background: #000;
         }
-        .portrait-wrapper::before {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
-            background-size: 200% 200%;
-            animation: shimmer 3s infinite linear;
-            pointer-events: none; z-index: 2;
+        .portrait-wrapper video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .portrait-wrapper::after {
-            content: ''; position: absolute; left: 0; right: 0; top: 0; height: 8px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 1), transparent); 
-            box-shadow: 0 0 30px 8px var(--neon-purple), 0 0 50px 15px var(--neon-cyan);
-            animation: scanline 3s infinite cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; z-index: 3;
+            content: ''; position: absolute; left: 0; right: 0; top: 0; height: 4px;
+            background: rgba(255, 255, 255, 0.8); 
+            box-shadow: 0 0 15px 3px var(--neon-purple);
+            animation: scanline 4s infinite cubic-bezier(0.4, 0, 0.2, 1); 
+            pointer-events: none;
         }
 
-        /* --- TOP RIGHT HARDWARE (mirrored from left) --- */
+        /* --- الهاردوير --- */
         .hardware-screws {
             position: absolute; top: 25px; right: 15px;
             display: flex; flex-direction: column; gap: 12px; z-index: 5;
         }
         .status-dot { 
-            width: 10px; height: 10px; border-radius: 50%; 
+            width: 9px; height: 9px; border-radius: 50%; 
             background: var(--neon-cyan); 
-            animation: blink 1.2s infinite ease-in-out; 
-            box-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan);
+            animation: blink 1.5s infinite ease-in-out; 
+            box-shadow: 0 0 10px var(--neon-cyan);
         }
-        .screw { width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(135deg, #555, #222); box-shadow: inset 2px 2px 4px #000, 0 0 10px rgba(213,0,255,0.5); }
+        .screw { width: 9px; height: 9px; border-radius: 50%; background: #333; box-shadow: inset 1px 1px 2px #000; }
 
         .data-blocks {
-            position: absolute; top: 70px; right: 10px; display: flex; flex-direction: column; gap: 5px; opacity: 0.8;
+            position: absolute; top: 70px; right: 10px; 
+            display: flex; flex-direction: column; gap: 5px; opacity: 0.7;
             align-items: flex-end;
-            animation: rotateHue 5s infinite linear;
         }
-        .d-box { width: 20px; height: 8px; background: var(--text-dim); box-shadow: 0 0 10px currentColor; }
-        .d-box.cyan { background: var(--neon-cyan); width: 12px; box-shadow: 0 0 15px var(--neon-cyan); }
-        .d-box.purp { background: var(--neon-purple); width: 16px; box-shadow: 0 0 15px var(--neon-purple); }
+        .d-box { width: 20px; height: 8px; background: var(--text-dim); }
+        .d-box.cyan { background: var(--neon-cyan); width: 12px; box-shadow: 0 0 8px var(--neon-cyan); }
+        .d-box.purp { background: var(--neon-purple); width: 16px; box-shadow: 0 0 8px var(--neon-purple); }
 
-        /* --- VERTICAL BRANDING (mirrored to right side) --- */
+        /* --- العلامة العمودية --- */
         .vertical-brand {
             position: absolute; right: -12px; top: 50%; transform: translateY(-50%) rotate(180deg);
-            writing-mode: vertical-rl; color: transparent; -webkit-text-stroke: 2px var(--neon-purple);
-            font-size: 24px; font-weight: 900; letter-spacing: 6px; 
-            text-shadow: 0 0 20px rgba(213, 0, 255, 0.8), 0 0 40px rgba(0, 229, 255, 0.5);
-            z-index: 5; opacity: 0; animation: bootUp 0.5s 0.5s forwards, textGlow 3s infinite;
+            writing-mode: vertical-rl; color: transparent; -webkit-text-stroke: 1px var(--neon-purple);
+            font-size: 22px; font-weight: 900; letter-spacing: 6px; 
+            text-shadow: 0 0 10px rgba(213, 0, 255, 0.6);
+            z-index: 5; opacity: 0; animation: bootUp 0.5s 0.5s forwards;
             font-family: 'Tahoma', sans-serif;
         }
 
-        /* --- LEFT EDGE DATA SPECS (mirrored from right) --- */
+        /* --- المواصفات الجانبية --- */
         .right-specs {
             position: absolute; left: 8px; top: 40px;
             display: flex; gap: 15px; writing-mode: vertical-rl; z-index: 5;
@@ -248,55 +201,46 @@
         .spec-label { 
             color: var(--neon-cyan); font-size: 8px; letter-spacing: 2px; font-weight: bold; 
             font-family: 'Tahoma', sans-serif;
-            text-shadow: 0 0 10px var(--neon-cyan);
         }
         .spec-value { 
-            color: var(--text-main); font-size: 11px; letter-spacing: 1px; font-weight: bold;
-            text-shadow: 0 0 10px rgba(255,255,255,0.8);
+            color: var(--text-main); font-size: 10px; letter-spacing: 1px; font-weight: bold;
         }
 
-        /* --- BOTTOM RIGHT ANGLED PANEL (mirrored from left) --- */
+        /* --- لوحة الاسم --- */
         .name-panel {
             position: absolute; bottom: 65px; right: 0; width: 60%; 
-            background: linear-gradient(135deg, rgba(10, 10, 15, 0.95), rgba(26, 10, 46, 0.95));
-            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 15, 0.95);
             padding: 12px 15px 12px 20px;
-            border: 2px solid var(--neon-purple); border-right: none;
-            clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%, 0 25%);
-            z-index: 10; opacity: 0; animation: bootUp 0.5s 0.8s forwards, rainbowBorder 6s infinite linear;
+            border: 1px solid var(--neon-purple); border-right: none;
+            z-index: 10; opacity: 0; animation: bootUp 0.5s 0.8s forwards;
             text-align: right;
-            box-shadow: 0 0 30px rgba(213, 0, 255, 0.5), inset 0 0 20px rgba(0, 229, 255, 0.2);
+            box-shadow: 0 0 20px rgba(213, 0, 255, 0.3);
         }
         .name-label { 
-            color: var(--neon-cyan); font-size: 10px; font-weight: bold; letter-spacing: 2px; 
+            color: var(--neon-cyan); font-size: 9px; font-weight: bold; letter-spacing: 2px; 
             font-family: 'Tahoma', sans-serif;
-            text-shadow: 0 0 10px var(--neon-cyan);
         }
         .name-value { 
             color: var(--text-main); font-size: 20px; font-weight: 900; letter-spacing: 1px; margin-bottom: 6px; 
-            text-shadow: 0 0 15px rgba(255,255,255,0.8), 0 0 30px var(--neon-purple);
+            text-shadow: 0 0 8px rgba(213, 0, 255, 0.6);
             font-family: 'Tahoma', sans-serif;
-            animation: glitch 5s infinite;
         }
         .mission-label { 
-            color: var(--neon-pink); font-size: 9px; font-weight: bold; letter-spacing: 2px; 
+            color: var(--neon-pink); font-size: 8px; font-weight: bold; letter-spacing: 2px; 
             font-family: 'Tahoma', sans-serif;
-            text-shadow: 0 0 10px var(--neon-pink);
         }
         .mission-value { 
-            color: var(--text-main); font-size: 12px; font-weight: bold; letter-spacing: 1px; 
+            color: var(--text-main); font-size: 11px; font-weight: bold; letter-spacing: 1px; 
             font-family: 'Tahoma', sans-serif;
-            text-shadow: 0 0 10px var(--neon-green);
         }
         .barcode {
             position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
             width: 12px; height: 40px; 
             background: repeating-linear-gradient(0deg, #fff, #fff 1px, transparent 1px, transparent 3px); 
-            opacity: 0.9;
-            box-shadow: 0 0 15px var(--neon-cyan);
+            opacity: 0.8;
         }
 
-        /* --- BOTTOM LEFT HUD LOGO / TELEGRAM BUTTON (mirrored from right) --- */
+        /* --- زر تيليجرام --- */
         .cyber-logo {
             position: absolute; bottom: 65px; left: 25px;
             display: flex; flex-direction: column; align-items: center; gap: 6px; z-index: 10;
@@ -305,120 +249,80 @@
         }
         
         .cyber-logo:active .crosshair { 
-            transform: scale(0.85) rotate(180deg); 
-            box-shadow: 0 0 40px var(--neon-cyan), 0 0 60px var(--neon-purple); 
+            transform: scale(0.9); 
+            box-shadow: 0 0 20px var(--neon-cyan); 
             border-color: var(--neon-cyan); 
-            background: rgba(0, 229, 255, 0.3);
         }
-        .cyber-logo:active .tg-icon { fill: var(--text-main); transform: scale(1.3); }
-        .cyber-logo:active .logo-text { color: var(--neon-cyan); text-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-cyan); }
+        .cyber-logo:active .tg-icon { fill: var(--text-main); }
+        .cyber-logo:active .logo-text { color: var(--neon-cyan); }
 
         .tg-label {
             font-size: 8px; color: var(--neon-cyan); font-weight: bold; letter-spacing: 2px;
-            text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan); margin-bottom: 2px;
             font-family: 'Tahoma', sans-serif;
-            animation: textGlow 2s infinite;
         }
 
         .crosshair {
-            width: 50px; height: 50px; 
-            border: 3px solid var(--neon-purple); border-radius: 50%;
+            width: 48px; height: 48px; 
+            border: 2px solid var(--neon-purple); border-radius: 50%;
             position: relative; 
-            box-shadow: 0 0 20px var(--neon-purple), 0 0 40px var(--neon-purple), inset 0 0 15px rgba(213,0,255,0.5);
+            box-shadow: 0 0 15px var(--neon-purple);
             display: flex; justify-content: center; align-items: center;
-            background: radial-gradient(circle, rgba(0, 229, 255, 0.2), rgba(213, 0, 255, 0.1));
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            animation: rainbowBorder 4s infinite linear;
+            background: rgba(0, 229, 255, 0.05);
+            transition: all 0.2s ease;
         }
         
         .ring-1 { 
-            position: absolute; top: -8px; left: -8px; right: -8px; bottom: -8px; 
-            border: 2px dashed var(--neon-cyan); border-radius: 50%; 
-            animation: spin 4s linear infinite;
-            box-shadow: 0 0 15px var(--neon-cyan);
+            position: absolute; top: -7px; left: -7px; right: -7px; bottom: -7px; 
+            border: 1px dashed var(--neon-cyan); border-radius: 50%; 
+            animation: spin 6s linear infinite;
         }
         .ring-2 { 
-            position: absolute; top: -14px; left: -14px; right: -14px; bottom: -14px; 
-            border: 2px dotted var(--neon-pink); border-radius: 50%; 
-            animation: spinRev 6s linear infinite;
-            box-shadow: 0 0 15px var(--neon-pink);
-        }
-        .ring-3 {
-            position: absolute; top: -20px; left: -20px; right: -20px; bottom: -20px;
-            border: 1px solid var(--neon-green); border-radius: 50%;
-            animation: spin 8s linear infinite;
-            box-shadow: 0 0 10px var(--neon-green);
-            opacity: 0.6;
+            position: absolute; top: -12px; left: -12px; right: -12px; bottom: -12px; 
+            border: 1px dotted var(--neon-pink); border-radius: 50%; 
+            animation: spinRev 8s linear infinite;
         }
         
-        /* Telegram Icon directly centered in the HUD */
         .tg-icon { 
-            width: 26px; height: 26px; 
+            width: 24px; height: 24px; 
             fill: var(--neon-cyan); 
             margin-left: 2px;
-            transition: all 0.3s;
-            animation: floatIcon 2s infinite ease-in-out;
-            filter: drop-shadow(0 0 10px var(--neon-cyan));
+            animation: floatIcon 3s infinite ease-in-out;
         }
 
         .logo-text { 
-            font-size: 13px; font-weight: 900; letter-spacing: 3px; 
-            text-shadow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-purple); 
-            transition: all 0.3s;
-            animation: textGlow 3s infinite;
+            font-size: 12px; font-weight: 900; letter-spacing: 3px; 
+            text-shadow: 0 0 6px var(--neon-purple); 
         }
 
-        /* --- FIXED ACTION CONSOLE --- */
+        /* --- وحدة التحكم --- */
         .action-console {
             position: absolute;
             bottom: 15px;
             left: 0; width: 100%;
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
             z-index: 20; opacity: 0; animation: bootUp 0.5s 1s forwards;
         }
 
         .meta-text { 
-            font-size: 8px; color: var(--text-dim); letter-spacing: 2px; 
+            font-size: 7px; color: var(--text-dim); letter-spacing: 2px; 
             font-family: 'Tahoma', sans-serif;
-            text-shadow: 0 0 5px rgba(255,255,255,0.3);
         }
 
         .init-btn {
             position: relative;
-            background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(213, 0, 255, 0.1));
-            border: 2px solid var(--neon-cyan);
+            background: rgba(0, 229, 255, 0.05);
+            border: 1px solid var(--neon-cyan);
             color: var(--neon-cyan);
-            padding: 12px 35px;
+            padding: 10px 30px;
             font-family: 'Tahoma', var(--font-sys);
-            font-size: 14px; font-weight: bold; letter-spacing: 3px;
-            cursor: pointer; transition: all 0.3s;
-            box-shadow: 
-                0 0 20px rgba(0,229,255,0.4), 
-                inset 0 0 15px rgba(0,229,255,0.2),
-                0 0 40px rgba(213,0,255,0.3);
-            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
-            animation: rainbowBorder 5s infinite linear;
-            text-shadow: 0 0 10px var(--neon-cyan);
+            font-size: 13px; font-weight: bold; letter-spacing: 3px;
+            cursor: pointer; transition: all 0.2s;
+            box-shadow: 0 0 12px rgba(0,229,255,0.3), inset 0 0 6px rgba(0,229,255,0.1);
         }
 
         .init-btn:active {
-            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple)); 
-            color: #000;
-            box-shadow: 0 0 40px rgba(0,229,255,1), 0 0 60px rgba(213,0,255,0.8); 
-            transform: scale(0.9);
-        }
-
-        /* --- EXTRA GLITCH OVERLAY --- */
-        .cyber-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(45deg, transparent 40%, rgba(0, 229, 255, 0.05) 50%, transparent 60%);
-            background-size: 300% 300%;
-            animation: shimmer 4s infinite linear;
-            pointer-events: none;
-            z-index: 100;
-            mix-blend-mode: overlay;
+            background: var(--neon-cyan); color: #000;
+            box-shadow: 0 0 20px rgba(0,229,255,0.8); transform: scale(0.95);
         }
 
     </style>
@@ -426,6 +330,11 @@
 <body>
 
 <div class="cyber-card" id="mainCard">
+    
+    <!-- الفيديو في الخلفية -->
+    <video class="bg-video" id="bgVideo" autoplay muted loop playsinline>
+        <source src="https://raw.githubusercontent.com/abanoub02230265/video0/main/2026-06-10-001250582.mp4" type="video/mp4">
+    </video>
     
     <div class="ticker-wrap">
         <div class="ticker">
@@ -436,7 +345,12 @@
 
     <div id="particles"></div>
 
-    <div class="portrait-wrapper"></div>
+    <!-- الفيديو المركزي (بدلاً من الصورة) -->
+    <div class="portrait-wrapper">
+        <video id="portraitVideo" autoplay muted loop playsinline>
+            <source src="https://raw.githubusercontent.com/abanoub02230265/video0/main/2026-06-10-001250582.mp4" type="video/mp4">
+        </video>
+    </div>
 
     <div class="hardware-screws">
         <div class="status-dot"></div>
@@ -471,7 +385,6 @@
         <div class="crosshair">
             <div class="ring-1"></div>
             <div class="ring-2"></div>
-            <div class="ring-3"></div>
             <svg class="tg-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.21-1.12-.33-1.08-.7.02-.19.27-.39.75-.6 2.93-1.28 4.88-2.12 5.86-2.53 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .24z"/></svg>
         </div>
         <div class="logo-text">MODS</div>
@@ -485,12 +398,28 @@
 </div>
 
 <script>
-    // --- ADVANCED PARTICLE ENGINE ---
+    // --- تشغيل الفيديوهين مع الصوت ---
+    const bgVideo = document.getElementById('bgVideo');
+    const portraitVideo = document.getElementById('portraitVideo');
+    
+    // تشغيل الفيديو الخلفي
+    bgVideo.addEventListener('loadedmetadata', function() {
+        bgVideo.muted = false;
+        bgVideo.play();
+    });
+    
+    // تشغيل الفيديو المركزي
+    portraitVideo.addEventListener('loadedmetadata', function() {
+        portraitVideo.muted = false;
+        portraitVideo.play();
+    });
+    
+    // --- محرك الجسيمات المحسّن ---
     function spawnParticles() {
         const container = document.getElementById('particles');
-        const particleCount = 60; 
+        const particleCount = 25; 
         
-        const colors = ['var(--neon-purple)', 'var(--neon-cyan)', 'var(--neon-pink)', 'var(--neon-green)'];
+        const colors = ['var(--neon-purple)', 'var(--neon-cyan)', 'var(--neon-pink)'];
         
         for (let i = 0; i < particleCount; i++) {
             let p = document.createElement('div');
@@ -498,44 +427,45 @@
             
             p.style.left = Math.random() * 100 + '%';
             p.style.top = (80 + Math.random() * 20) + '%'; 
-            p.style.animationDuration = (Math.random() * 4 + 2) + 's';
-            p.style.animationDelay = (Math.random() * 3) + 's';
+            p.style.animationDuration = (Math.random() * 4 + 3) + 's';
+            p.style.animationDelay = (Math.random() * 4) + 's';
             
             const color = colors[Math.floor(Math.random() * colors.length)];
             p.style.background = color;
-            p.style.boxShadow = `0 0 15px 3px ${color}, 0 0 30px 5px ${color}`;
+            p.style.boxShadow = `0 0 8px 2px ${color}`;
             
             container.appendChild(p);
         }
     }
 
-    window.onload = spawnParticles;
+    window.addEventListener('load', spawnParticles);
 
-    // --- OPEN LINKS EXTERNALLY ---
     function openLink(url) {
         window.open(url, '_blank');
     }
 
-    // --- FLAWLESS ACTION://CLOSE INTEGRATION ---
     function triggerClose() {
         const card = document.getElementById('mainCard');
         const btn = document.querySelector('.init-btn');
         
-        btn.style.background = 'linear-gradient(135deg, var(--neon-cyan), var(--neon-purple))';
+        // إيقاف الفيديوهين
+        bgVideo.pause();
+        portraitVideo.pause();
+        
+        btn.style.background = 'var(--neon-cyan)';
         btn.style.color = '#000';
         btn.innerText = 'تم منح الوصول...';
-        btn.style.boxShadow = '0 0 50px var(--neon-cyan), 0 0 80px var(--neon-purple)';
 
         document.getElementById('particles').style.opacity = '0';
 
         card.style.animation = 'none';
-        card.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-        card.style.transform = 'scale(0.8) translateY(80px) rotateX(15deg)';
+        card.style.transition = 'all 0.4s ease';
+        card.style.transform = 'scale(0.85) translateY(60px)';
         card.style.opacity = '0';
         
         setTimeout(() => {
             window.location.href = "action://close";
-        }, 500);
+        }, 400);
     }
 </script>
 
